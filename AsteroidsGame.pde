@@ -5,12 +5,15 @@ boolean leftPressed;
 boolean rightPressed;
 boolean sPressed;
 Star[] stars = new Star[1000];
+Asteroid[] asty = new Asteroid[10];
 
 public void setup() {
   size(1000, 1000);
   background(0);
   upPressed = downPressed = leftPressed = rightPressed = sPressed = false;
   for(int i = 0; i < stars.length; i++) stars[i] = new Star();
+  for(int i = 0; i < asty.length; i++) asty[i] = new Asteroid();
+  strokeWeight(1.5);
 }
 public void draw() {
   fill(0);
@@ -22,6 +25,10 @@ public void draw() {
   enterprise.move();
   enterprise.show(upPressed,downPressed);
   enterprise.tick();
+  for(int i = 0; i < asty.length; i++) {
+    asty[i].move();
+    asty[i].show();
+  }
   if (keyPressed) {
     if (upPressed) enterprise.accelerate(0.1);
     if (downPressed) enterprise.accelerate(-0.1);
