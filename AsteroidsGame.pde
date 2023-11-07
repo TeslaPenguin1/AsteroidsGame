@@ -1,18 +1,17 @@
 Spaceship enterprise = new Spaceship();
-boolean upPressed;
-boolean downPressed;
-boolean leftPressed;
-boolean rightPressed;
-boolean sPressed;
+boolean upPressed, downPressed, leftPressed, rightPressed, sPressed, spacePressed;
 Star[] stars = new Star[1000];
-Asteroid[] asty = new Asteroid[10];
+ArrayList <Asteroid> asts;
+ArrayList <Bullet> bullets;
 
 public void setup() {
-  size(1000, 1000);
+  size(1200, 900);
   background(0);
-  upPressed = downPressed = leftPressed = rightPressed = sPressed = false;
+  upPressed = downPressed = leftPressed = rightPressed = sPressed = spacePressed = false;
+  asts = new ArrayList <Asteroid>();
+  bullets = new ArrayList <Bullet>();
+  for (int i = 0; i < 10; i++) asts.add(new Asteroid());
   for(int i = 0; i < stars.length; i++) stars[i] = new Star();
-  for(int i = 0; i < asty.length; i++) asty[i] = new Asteroid();
   strokeWeight(1.5);
 }
 public void draw() {
@@ -25,9 +24,25 @@ public void draw() {
   enterprise.move();
   enterprise.show(upPressed,downPressed);
   enterprise.tick();
-  for(int i = 0; i < asty.length; i++) {
-    asty[i].move();
-    asty[i].show();
+  for(int i = asts.size() - 1; i >= 0; i--) {
+    asts.get(i).move();
+    asts.get(i).show();
+    if(asts.get(i).collides(enterprise,35)) asts.remove(i);
+  }
+  
+  for(int i = bullets.size() - 1; i >= 0; i--) {
+    if (bullets.get(i).getTimer() == 0) {
+      bullets.remove(i);
+      break;
+    }
+    bullets.get(i).move();
+    bullets.get(i).show();
+    for(int j = asts.size() - 1; j >= 0; j--) {
+      if (asts.get(j).collides(bullets.get(i),35)) {
+        bullets.remove(i);
+        asts.remove(j);
+      }
+    }
   }
   if (keyPressed) {
     if (upPressed) enterprise.accelerate(0.1);
@@ -35,6 +50,7 @@ public void draw() {
     if (leftPressed) enterprise.turn(-4);
     if (rightPressed) enterprise.turn(4);
     if (sPressed) enterprise.hyperspace();
+    if (spacePressed) enterprise.shoot(bullets);
   }
 }
 
@@ -44,6 +60,7 @@ public void keyPressed() {
   if (keyCode == LEFT) leftPressed = true;
   if (keyCode == RIGHT) rightPressed = true;
   if (key == 's') sPressed = true;
+  if (key == ' ') spacePressed = true;
 }
 
 public void keyReleased() {
@@ -52,4 +69,5 @@ public void keyReleased() {
   if (keyCode == LEFT) leftPressed = false;
   if (keyCode == RIGHT) rightPressed = false;
   if (key == 's') sPressed = false;
+  if (key == ' ') spacePressed = false;
 }
