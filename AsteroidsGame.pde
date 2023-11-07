@@ -5,7 +5,7 @@ ArrayList <Asteroid> asts;
 ArrayList <Bullet> bullets;
 
 public void setup() {
-  size(1200, 900);
+  size(1200, 800);
   background(0);
   upPressed = downPressed = leftPressed = rightPressed = sPressed = spacePressed = false;
   asts = new ArrayList <Asteroid>();
