@@ -1,21 +1,22 @@
 class Spaceship extends Floater  
 {   
-    private int hyperTimer, showFire;
+    protected int hyperTimer, showFire, shootTimer;
     public Spaceship() {
       corners = 4;
-      xCorners = new int[]{-8,16,-8,-2};
-      yCorners = new int[]{-8,0,8,0};
+      xCorners = new int[]{-8, 16, -8, -2};
+      yCorners = new int[]{-8, 0,   8,  0};
       myFillColor = #000000;
       myStrokeColor = #FFFFFF;
-      myCenterX = 500;
-      myCenterY = 500;
+      myCenterX = 600;
+      myCenterY = 450;
       myXspeed = myYspeed = myPointDirection = 0;
       hyperTimer = 0;
       showFire = 2;
     }
     public void tick() {
-      //decrement the hyperspace cooldown
+      //decrement the cooldown
       if (hyperTimer > 0) hyperTimer--;
+      if (shootTimer > 0) shootTimer--;
     }
     public void hyperspace() {
       if (hyperTimer == 0) {
@@ -24,6 +25,12 @@ class Spaceship extends Floater
         myXspeed = myYspeed = 0;
         myPointDirection = 360*Math.random();
         hyperTimer = 300;
+      }
+    }
+    public void shoot(ArrayList proj) {
+      if (shootTimer == 0) {
+        proj.add(new Bullet(this));
+        shootTimer = 10;
       }
     }
     public int getHyperTimer() {
