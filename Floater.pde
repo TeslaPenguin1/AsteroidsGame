@@ -74,4 +74,22 @@ class Floater //Do NOT modify the Floater class! Make changes in the Spaceship c
     rotate(-1*dRadians);
     translate(-1*(float)myCenterX, -1*(float)myCenterY);
   }   
+  public double getX() {
+    return myCenterX;
+  }
+  public double getY() {
+    return myCenterY;
+  }
+  public double getXspeed() {
+    return myXspeed;
+  }
+  public double getYspeed() {
+    return myYspeed;
+  }
+  public double getPointDirection() {
+    return myPointDirection;
+  }
+  public boolean collides(Floater obj, double dist) {
+    return(dist((float)myCenterX,(float)myCenterY,(float)obj.getX(),(float)obj.getY()) < dist);
+  }
 } 
