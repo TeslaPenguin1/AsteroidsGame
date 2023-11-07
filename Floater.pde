@@ -90,6 +90,6 @@ class Floater //Do NOT modify the Floater class! Make changes in the Spaceship c
     return myPointDirection;
   }
   public boolean collides(Floater obj, double dist) {
-    return(Math.sqrt(Math.pow(myCenterX - obj.getX(), 2) + Math.pow(myCenterY - obj.getY(), 2)) > dist);
+    return(Math.sqrt(Math.pow(myCenterX - obj.getX(), 2) + Math.pow(myCenterY - obj.getY(), 2)) < dist);
   }
 } 
