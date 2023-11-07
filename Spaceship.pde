@@ -8,7 +8,7 @@ class Spaceship extends Floater
       myFillColor = #000000;
       myStrokeColor = #FFFFFF;
       myCenterX = 600;
-      myCenterY = 450;
+      myCenterY = 400;
       myXspeed = myYspeed = myPointDirection = 0;
       hyperTimer = 0;
       showFire = 2;
