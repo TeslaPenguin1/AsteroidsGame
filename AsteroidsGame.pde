@@ -41,6 +41,7 @@ public void draw() {
       if (asts.get(j).collides(bullets.get(i),35)) {
         bullets.remove(i);
         asts.remove(j);
+        break;
       }
     }
   }
