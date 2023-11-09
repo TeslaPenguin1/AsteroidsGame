@@ -1,41 +1,44 @@
 class Asteroid extends Floater {
   private double rotSpeed;
   private int size;
-  private int variant;
-  Asteroid() {
-    variant = (int)(Math.random()*4);
-    if (variant == 0) {
-      corners = 12;
-      xCorners = new int[]{0,32,27,43,35,11,7,-4,-19,-21,-39,-25};
-      yCorners = new int[]{40,25,3,-18,-35,-36,-13,-34,-30,-20,3,25};
+  public Asteroid(int n, double x, double y) {
+    size = n;
+    
+    corners = (int)(Math.random()*5)+10+15*size;
+    
+    xCorners = new int[corners];
+    yCorners = new int[corners];
+    
+    for(int i = 0; i < corners; i++) {
+      int dist = (int)(Math.random()*corners/4 + 3*corners/4);
+      xCorners[i] = (int)(dist * Math.cos(2*PI*i/corners));
+      yCorners[i] = (int)(dist * Math.sin(2*PI*i/corners));
     }
-    if (variant == 1) {
-      corners = 12;
-      xCorners = new int[]{3,18,37,33,43,35,7,-10,-25,-27,-9,5};
-      yCorners = new int[]{38,39,28,17,-7,-11,-13,-27,-11,14,29,21};
-    }
-    if (variant == 2) {
-      corners = 15;
-      xCorners = new int[]{4,9,27,37,33,40,35,20,5,-19,-17,-38,-36,-32,-18};
-      yCorners = new int[]{23,11,33,19,3,-13,-29,-21,-37,-38,-17,-10,-4,20,32};
-    }
-    if (variant == 3) {
-      corners = 9;
-      xCorners = new int[]{7,13,29,30,12,-18,-19,-35,-23};
-      yCorners = new int[]{35,18,6,-20,-37,-22,-4,2,23};
-    }
-    myFillColor = #000000;
+
+    myFillColor = 127;
     myStrokeColor = #FFFFFF;
-    myCenterX = Math.random()*1200;
-    myCenterY = 0;
+    myCenterX = x;
+    myCenterY = y;
     myXspeed = 6*Math.random()-3;
     myYspeed = 6*Math.random()-3;
     myPointDirection = 0;
     rotSpeed = 5*Math.random()-2.5;
-    size = 2;
+    health = maxHealth = 3+size*3;
+    damage = 9+size*3;
   }
   public void move() {
     myPointDirection += rotSpeed;
     super.move();
+    myFillColor = 127*(health-3)/12;
+  }
+  public int getSize() {
+    return size;
+  }
+  public double getRadius() {
+    return corners*7/8.0;
+  }
+  public void split(ArrayList list) {
+    list.add(new Asteroid(size-1, myCenterX,myCenterY));
+    list.add(new Asteroid(size-1, myCenterX,myCenterY));
   }
 }
