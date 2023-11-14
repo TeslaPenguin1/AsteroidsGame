@@ -38,7 +38,7 @@ public void setup() {
   upPressed = downPressed = leftPressed = rightPressed = sPressed = spacePressed = false;
   asts = new ArrayList <Asteroid>();
   bullets = new ArrayList <Bullet>();
-  for (int i = 0; i < 10; i++) asts.add(new Asteroid(2, Math.random()*1200,0));
+  for (int i = 0; i < 20; i++) asts.add(new Asteroid(2, Math.random()*1200,0));
   for(int i = 0; i < stars.length; i++) stars[i] = new Star();
   strokeWeight(1.5);
 }
