@@ -1,6 +1,6 @@
 Spaceship enterprise = new Spaceship();
 boolean doGame = true;
-boolean upPressed, downPressed, leftPressed, rightPressed, sPressed, spacePressed;
+boolean upPressed, downPressed, leftPressed, rightPressed, sPressed, spacePressed, dPressed;
 Star[] stars = new Star[1000];
 ArrayList <Asteroid> asts;
 ArrayList <Bullet> bullets;
@@ -15,7 +15,6 @@ Visuals
 
 Abilities
 - Alt utilities
-  - Shield
   - Chaff (not currently important)
 - Alt basic weapons
   - Wave
@@ -54,11 +53,12 @@ public void draw() {
     enterprise.move();
     enterprise.show(upPressed,downPressed);
     enterprise.tick();
+    enterprise.setShield(dPressed);
   }
   for(int i = asts.size() - 1; i >= 0; i--) {
     asts.get(i).move();
     asts.get(i).show();
-    if(asts.get(i).collides(enterprise,asts.get(i).getRadius())) {
+    if(asts.get(i).collides(enterprise,asts.get(i).getRadius() + enterprise.shieldSize())) {
       enterprise.hit(asts.get(i).getDamage());
       asts.remove(i);
       if(enterprise.getHealth() <= 0) doGame = false;
@@ -101,6 +101,7 @@ public void keyPressed() {
   if (keyCode == RIGHT) rightPressed = true;
   if (key == 's') sPressed = true;
   if (key == ' ') spacePressed = true;
+  if (key == 'd') dPressed = true;
 }
 
 public void keyReleased() {
@@ -110,4 +111,5 @@ public void keyReleased() {
   if (keyCode == RIGHT) rightPressed = false;
   if (key == 's') sPressed = false;
   if (key == ' ') spacePressed = false;
+  if (key == 'd') dPressed = false;
 }
