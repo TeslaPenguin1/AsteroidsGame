@@ -1,5 +1,5 @@
 class Bullet extends Floater {
-  private int timer;
+  protected int timer;
   public Bullet(Spaceship ship) {
     myCenterX = ship.getX();
     myCenterY = ship.getY();
