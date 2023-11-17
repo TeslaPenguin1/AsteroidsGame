@@ -1,18 +1,18 @@
 class Missile extends Bullet {
-  private Floater target;
+  private Floater tgt;
   private double targetX, targetY, targetAngle, myRad, speedCap;
-  public Missile(Spaceship ship, Floater tgt) {
+  public Missile(Spaceship ship, Floater t) {
     super(ship);
-    target = tgt;
+    tgt = t;
     timer = -1;
     speedCap = 30;
   }
-  public void target(Floater tgt) {
-    target = tgt;
+  public void target(Floater t) {
+    tgt = t;
   }
   public void move() {
-    //targetX = target.getX();
-    //targetY = target.getY();
+    //targetX = tgt.getX();
+    //targetY = tgt.getY();
     targetX = mouseX;
     targetY = mouseY;
     //calculates target angle and prevents wraparound
