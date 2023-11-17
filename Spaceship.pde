@@ -7,7 +7,7 @@ class Spaceship extends Floater
     protected boolean shielded, shieldBroken, targetLocked;
     public final static int MAX_HEALTH = 30;
     public final static int SHIELD_MAX = 60;
-    protected Floater target;
+    protected Floater tgt;
     public Spaceship() {
       corners = 4;
       xCorners = new int[]{-8, 16, -8, -2};
@@ -33,7 +33,7 @@ class Spaceship extends Floater
       shieldBar = #00FFFF;
       recovRate = 2;
       targetNum = -1;
-      target = null;
+      tgt = null;
     }
     public void tick() {
       //decrement the cooldown
@@ -62,7 +62,7 @@ class Spaceship extends Floater
     }
     
     public void deselect() {
-      target = null;
+      tgt = null;
       targetNum = -1;
     }
     public void targetDecrement(int num) {
@@ -78,10 +78,10 @@ class Spaceship extends Floater
       if (targetNum > arr.size()-1) targetNum = 0;
       
       if (targetNum >= 0) {
-        target = (Floater)arr.get(targetNum);
+        tgt = (Floater)arr.get(targetNum);
         
-        if(myCenterX > target.getX()) targetAngle = PI+Math.atan((myCenterY-target.getY())/(myCenterX-target.getX()));
-        if(myCenterX < target.getX()) targetAngle = Math.atan((myCenterY-target.getY())/(myCenterX-target.getX()));
+        if(myCenterX > tgt.getX()) targetAngle = PI+Math.atan((myCenterY-tgt.getY())/(myCenterX-tgt.getX()));
+        if(myCenterX < tgt.getX()) targetAngle = Math.atan((myCenterY-tgt.getY())/(myCenterX-tgt.getX()));
         double radAngle = (myPointDirection*PI/180)%(2*PI);
         if(targetAngle-radAngle > PI) targetAngle-=2*PI;
         if(targetAngle-radAngle < -PI) targetAngle+=2*PI;
@@ -90,14 +90,14 @@ class Spaceship extends Floater
         if (radAngle-0.5 < targetAngle && radAngle+0.5 > targetAngle) fill(#FF0000);
         else fill(#FF8800);
         
-        translate((float)target.getX(), (float)target.getY());
+        translate((float)tgt.getX(), (float)tgt.getY());
         ellipse(0,0,100,100);
-        translate(-1*(float)target.getX(), -1*(float)target.getY());
+        translate(-1*(float)tgt.getX(), -1*(float)tgt.getY());
       }
     }
     
     public Floater getTarget() {
-      return target;
+      return tgt;
     }
     
     public void hyperspace() {
