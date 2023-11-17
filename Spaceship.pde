@@ -1,13 +1,13 @@
 class Spaceship extends Floater  
 {   
-    protected int hyperTimer, showFire, shootTimer, timer,
+    protected int hyperTimer, showFire, shootTimer, timer, targetNum, targetTimer,
         recovRate, shieldBar, shieldRot, shieldCorners, shieldFill, shieldStroke, shieldHealth;
-        
     protected int[] shieldXCorners, shieldYCorners;
-    protected double speedCap;
-    protected boolean shielded, shieldBroken;
+    protected double speedCap, targetAngle;
+    protected boolean shielded, shieldBroken, targetLocked;
     public final static int MAX_HEALTH = 30;
     public final static int SHIELD_MAX = 60;
+    protected Floater target;
     public Spaceship() {
       corners = 4;
       xCorners = new int[]{-8, 16, -8, -2};
@@ -32,6 +32,8 @@ class Spaceship extends Floater
       shieldBroken = false;
       shieldBar = #00FFFF;
       recovRate = 2;
+      targetNum = -1;
+      target = null;
     }
     public void tick() {
       //decrement the cooldown
@@ -58,6 +60,46 @@ class Spaceship extends Floater
         myYspeed*=(1/overCap);
       }
     }
+    
+    public void deselect() {
+      target = null;
+      targetNum = -1;
+    }
+    public void targetDecrement(int num) {
+      if (num < targetNum) targetNum--;
+    }
+    
+    public void target(ArrayList arr, boolean cmd) {
+      if (cmd && targetTimer <= 0) {
+        targetTimer = 10;
+        targetNum++;
+      }
+      if (targetTimer > 0) targetTimer--;
+      if (targetNum > arr.size()-1) targetNum = 0;
+      
+      if (targetNum >= 0) {
+        target = (Floater)arr.get(targetNum);
+        
+        if(myCenterX > target.getX()) targetAngle = PI+Math.atan((myCenterY-target.getY())/(myCenterX-target.getX()));
+        if(myCenterX < target.getX()) targetAngle = Math.atan((myCenterY-target.getY())/(myCenterX-target.getX()));
+        double radAngle = (myPointDirection*PI/180)%(2*PI);
+        if(targetAngle-radAngle > PI) targetAngle-=2*PI;
+        if(targetAngle-radAngle < -PI) targetAngle+=2*PI;
+        
+        
+        if (radAngle-0.5 < targetAngle && radAngle+0.5 > targetAngle) fill(#FF0000);
+        else fill(#FF8800);
+        
+        translate((float)target.getX(), (float)target.getY());
+        ellipse(0,0,100,100);
+        translate(-1*(float)target.getX(), -1*(float)target.getY());
+      }
+    }
+    
+    public Floater getTarget() {
+      return target;
+    }
+    
     public void hyperspace() {
       if (hyperTimer == 0) {
         myCenterX = 1000*Math.random();
@@ -123,6 +165,8 @@ class Spaceship extends Floater
       quad(-20,17,-20,22,20,22,20,17);
       
       translate(-1*(float)myCenterX, -1*(float)myCenterY);
+      
+      
       strokeWeight(1.5);
       super.show();
       if (shielded) {
