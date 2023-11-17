@@ -1,6 +1,8 @@
 Spaceship enterprise = new Spaceship();
+Missile miss = new Missile(enterprise, enterprise);
 boolean doGame = true;
-boolean upPressed, downPressed, leftPressed, rightPressed, sPressed, spacePressed, dPressed;
+boolean upPressed, downPressed, leftPressed, rightPressed, sPressed, spacePressed, 
+    dPressed, shiftPressed;
 Star[] stars = new Star[1000];
 ArrayList <Asteroid> asts;
 ArrayList <Bullet> bullets;
@@ -25,6 +27,7 @@ Abilities
   - Lightning
   
 Enemies
+- UFOs
 - KKV + KKV Cluster
 - Snakes
 - Enemy Ship (V2 Ultrakill)
@@ -41,6 +44,7 @@ public void setup() {
   for (int i = 0; i < 20; i++) asts.add(new Asteroid(2, Math.random()*1200,0));
   for(int i = 0; i < stars.length; i++) stars[i] = new Star();
   strokeWeight(1.5);
+  enterprise.hit(-999999);
 }
 public void draw() {
   fill(0);
@@ -51,15 +55,22 @@ public void draw() {
     fill(#FF0000);
     quad(10,10,10,20,10+enterprise.getHyperTimer(),20,10+enterprise.getHyperTimer(),10);
     enterprise.move();
+    enterprise.target(asts, shiftPressed);
     enterprise.show(upPressed,downPressed);
     enterprise.tick();
     enterprise.setShield(dPressed);
+    miss.move();
+    miss.show();
+    if (enterprise.getTarget() != null) miss.target(enterprise.getTarget());
+    else miss.target(enterprise);
   }
   for(int i = asts.size() - 1; i >= 0; i--) {
     asts.get(i).move();
     asts.get(i).show();
     if(asts.get(i).collides(enterprise,asts.get(i).getRadius() + enterprise.shieldSize())) {
       enterprise.hit(asts.get(i).getDamage());
+      if (enterprise.getTarget() == asts.get(i)) enterprise.deselect();
+      else enterprise.targetDecrement(i);
       asts.remove(i);
       if(enterprise.getHealth() <= 0) doGame = false;
     }
@@ -78,6 +89,8 @@ public void draw() {
         bullets.remove(i);
         if (asts.get(j).getHealth() <= 0) {
           if(asts.get(j).getSize() > 0) asts.get(j).split(asts);
+          if (enterprise.getTarget() == asts.get(j)) enterprise.deselect();
+          else enterprise.targetDecrement(j);
           asts.remove(j);
         }
         break;
@@ -102,6 +115,7 @@ public void keyPressed() {
   if (key == 's') sPressed = true;
   if (key == ' ') spacePressed = true;
   if (key == 'd') dPressed = true;
+  if (keyCode == SHIFT) shiftPressed = true;
 }
 
 public void keyReleased() {
@@ -112,4 +126,5 @@ public void keyReleased() {
   if (key == 's') sPressed = false;
   if (key == ' ') spacePressed = false;
   if (key == 'd') dPressed = false;
+  if (keyCode == SHIFT) shiftPressed = false;
 }
