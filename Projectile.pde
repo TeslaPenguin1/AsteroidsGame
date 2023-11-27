@@ -3,4 +3,5 @@ class Projectile extends Floater {
   public int getTimer() {
     return timer;
   }
+  
 }
