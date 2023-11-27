@@ -3,7 +3,7 @@ class Asteroid extends Floater {
   private int size;
   public Asteroid(int n, double x, double y) {
     size = n;
-    
+    speedCap = -1;
     corners = (int)(Math.random()*5)+10+15*size;
     
     xCorners = new int[corners];
