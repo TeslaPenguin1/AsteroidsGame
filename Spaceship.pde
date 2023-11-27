@@ -3,8 +3,9 @@ class Spaceship extends Floater
     protected int hyperTimer, showFire, shootTimer, timer, targetNum, targetTimer,
         recovRate, shieldBar, shieldRot, shieldCorners, shieldFill, shieldStroke, shieldHealth;
     protected int[] shieldXCorners, shieldYCorners;
-    protected double speedCap, targetAngle;
+    protected double targetAngle;
     protected boolean shielded, shieldBroken, targetLocked;
+    protected String weapon;
     public final static int MAX_HEALTH = 30;
     public final static int SHIELD_MAX = 60;
     protected Floater tgt;
@@ -34,6 +35,7 @@ class Spaceship extends Floater
       recovRate = 2;
       targetNum = -1;
       tgt = null;
+      weapon = "Guns";
     }
     public void tick() {
       //decrement the cooldown
@@ -54,11 +56,7 @@ class Spaceship extends Floater
         shieldBar = #FF0000;
         recovRate = 4;
       }
-      double overCap = Math.sqrt(Math.pow(myXspeed,2)+Math.pow(myYspeed,2))/speedCap;
-      if (overCap > 1) {
-        myXspeed*=(1/overCap);
-        myYspeed*=(1/overCap);
-      }
+      
     }
     
     public void deselect() {
@@ -109,10 +107,42 @@ class Spaceship extends Floater
         hyperTimer = 300;
       }
     }
+    public void setWeapon(String wep) {
+      weapon = wep;
+    }
+    
+    /***
+    Valid weapons:
+    Guns          (done)
+    Ion Wave
+    PDC
+    Missiles
+    Mines
+    Lightning
+    ***/
+    
     public void shoot(ArrayList proj) {
       if (shootTimer == 0) {
-        proj.add(new Bullet(this));
-        shootTimer = 6;
+        if (weapon == "Guns") {
+            proj.add(new Bullet(this));
+            shootTimer = 6;
+        }
+        if (weapon == "PDC") {
+          
+        }
+        if (weapon == "Ion Wave") {
+          
+        }
+        if (weapon == "Missiles") {
+          proj.add(new Missile(this,tgt));
+          shootTimer = 30;
+        }
+        if (weapon == "Mines") {
+          
+        }
+        if (weapon == "Lightning") {
+          
+        }
       }
     }
     public void setShield(boolean s) {
