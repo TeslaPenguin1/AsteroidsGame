@@ -1,10 +1,10 @@
-class Bullet extends Floater {
-  protected int timer;
+class Bullet extends Projectile {
   public Bullet(Spaceship ship) {
     myCenterX = ship.getX();
     myCenterY = ship.getY();
     myXspeed = ship.getXspeed();
     myYspeed = ship.getYspeed();
+    speedCap = -1;
     myPointDirection = ship.getPointDirection();
     accelerate(12);
     timer = 90;
@@ -14,8 +14,5 @@ class Bullet extends Floater {
     fill(#FFFFFF);
     ellipse((float)myCenterX, (float)myCenterY, 3,3);
     timer--;
-  }
-  public int getTimer() {
-    return timer;
   }
 }
