@@ -6,6 +6,7 @@ class Floater //Do NOT modify the Floater class! Make changes in the Spaceship c
   protected int myFillColor;   
   protected int myStrokeColor;
   protected double myCenterX, myCenterY; //holds center coordinates   
+  protected double speedCap; //set to -1 for no cap
   protected double myXspeed, myYspeed; //holds the speed of travel in the x and y directions   
   protected double myPointDirection; //holds current direction the ship is pointing in degrees    
   protected int health, maxHealth;
@@ -30,7 +31,14 @@ class Floater //Do NOT modify the Floater class! Make changes in the Spaceship c
     //change the x and y coordinates by myXspeed and myYspeed       
     myCenterX += myXspeed;    
     myCenterY += myYspeed;     
-
+    
+    //caps speed
+    double overCap = Math.sqrt(Math.pow(myXspeed,2)+Math.pow(myYspeed,2))/speedCap;
+    if (overCap > 1) {
+      myXspeed*=(1/overCap);
+      myYspeed*=(1/overCap);
+    }
+    
     //wrap around screen    
     if(myCenterX >width)
     {     
