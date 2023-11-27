@@ -1,11 +1,10 @@
 Spaceship enterprise = new Spaceship();
-Missile miss = new Missile(enterprise, enterprise);
 boolean doGame = true;
 boolean upPressed, downPressed, leftPressed, rightPressed, sPressed, spacePressed, 
-    dPressed, shiftPressed;
+    dPressed, shiftPressed, wPressed, xPressed;
 Star[] stars = new Star[1000];
 ArrayList <Asteroid> asts;
-ArrayList <Bullet> bullets;
+ArrayList <Projectile> bullets;
 
 /*** TODO
 
@@ -40,7 +39,7 @@ public void setup() {
   background(0);
   upPressed = downPressed = leftPressed = rightPressed = sPressed = spacePressed = false;
   asts = new ArrayList <Asteroid>();
-  bullets = new ArrayList <Bullet>();
+  bullets = new ArrayList <Projectile>();
   for (int i = 0; i < 20; i++) asts.add(new Asteroid(2, Math.random()*1200,0));
   for(int i = 0; i < stars.length; i++) stars[i] = new Star();
   strokeWeight(1.5);
@@ -59,10 +58,6 @@ public void draw() {
     enterprise.show(upPressed,downPressed);
     enterprise.tick();
     enterprise.setShield(dPressed);
-    miss.move();
-    miss.show();
-    if (enterprise.getTarget() != null) miss.target(enterprise.getTarget());
-    else miss.target(enterprise);
   }
   for(int i = asts.size() - 1; i >= 0; i--) {
     asts.get(i).move();
@@ -104,6 +99,8 @@ public void draw() {
     if (rightPressed) enterprise.turn(4);
     if (sPressed) enterprise.hyperspace();
     if (spacePressed) enterprise.shoot(bullets);
+    if (wPressed) enterprise.setWeapon("Guns");
+    if (xPressed) enterprise.setWeapon("Missiles");
   }
 }
 
@@ -116,6 +113,8 @@ public void keyPressed() {
   if (key == ' ') spacePressed = true;
   if (key == 'd') dPressed = true;
   if (keyCode == SHIFT) shiftPressed = true;
+  if (key == 'w') wPressed = true;
+  if (key == 'x') xPressed = true;
 }
 
 public void keyReleased() {
@@ -127,4 +126,6 @@ public void keyReleased() {
   if (key == ' ') spacePressed = false;
   if (key == 'd') dPressed = false;
   if (keyCode == SHIFT) shiftPressed = false;
+  if (key == 'w') wPressed = false;
+  if (key == 'x') xPressed = false;
 }
