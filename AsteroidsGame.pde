@@ -1,7 +1,7 @@
 Spaceship enterprise = new Spaceship();
 boolean doGame = true;
 boolean upPressed, downPressed, leftPressed, rightPressed, sPressed, spacePressed, 
-    dPressed, shiftPressed, wPressed, xPressed;
+    dPressed, shiftPressed, ctrlPressed, wPressed, xPressed;
 Star[] stars = new Star[1000];
 ArrayList <Asteroid> asts;
 ArrayList <Projectile> bullets;
@@ -37,10 +37,9 @@ Enemies
 public void setup() {
   size(1200, 800);
   background(0);
-  upPressed = downPressed = leftPressed = rightPressed = sPressed = spacePressed = false;
   asts = new ArrayList <Asteroid>();
   bullets = new ArrayList <Projectile>();
-  for (int i = 0; i < 20; i++) asts.add(new Asteroid(2, Math.random()*1200,0));
+  for (int i = 0; i < 1; i++) asts.add(new Asteroid(2, Math.random()*1200,0));
   for(int i = 0; i < stars.length; i++) stars[i] = new Star();
   strokeWeight(1.5);
   enterprise.hit(-999999);
@@ -54,7 +53,7 @@ public void draw() {
     fill(#FF0000);
     quad(10,10,10,20,10+enterprise.getHyperTimer(),20,10+enterprise.getHyperTimer(),10);
     enterprise.move();
-    enterprise.target(asts, shiftPressed);
+    enterprise.target(asts, shiftPressed, ctrlPressed);
     enterprise.show(upPressed,downPressed);
     enterprise.tick();
     enterprise.setShield(dPressed);
@@ -98,7 +97,7 @@ public void draw() {
     if (leftPressed) enterprise.turn(-4);
     if (rightPressed) enterprise.turn(4);
     if (sPressed) enterprise.hyperspace();
-    if (spacePressed) enterprise.shoot(bullets);
+    if (spacePressed) enterprise.shoot(bullets, asts);
     if (wPressed) enterprise.setWeapon("Guns");
     if (xPressed) enterprise.setWeapon("Missiles");
   }
@@ -113,6 +112,7 @@ public void keyPressed() {
   if (key == ' ') spacePressed = true;
   if (key == 'd') dPressed = true;
   if (keyCode == SHIFT) shiftPressed = true;
+  if (keyCode == CONTROL) ctrlPressed = true;
   if (key == 'w') wPressed = true;
   if (key == 'x') xPressed = true;
 }
@@ -126,6 +126,7 @@ public void keyReleased() {
   if (key == ' ') spacePressed = false;
   if (key == 'd') dPressed = false;
   if (keyCode == SHIFT) shiftPressed = false;
+  if (keyCode == CONTROL) ctrlPressed = false;
   if (key == 'w') wPressed = false;
   if (key == 'x') xPressed = false;
 }
