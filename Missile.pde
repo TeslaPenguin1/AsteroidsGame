@@ -1,8 +1,10 @@
 class Missile extends Projectile {
   private Floater tgt;
-  private double targetX, targetY, targetAngle, myRad;
-  public Missile(Spaceship ship, Floater t) {
+  private ArrayList arr;
+  private double targetX, targetY, targetAngle, velAngle, interceptAngle, myRad;
+  public Missile(Spaceship ship, Floater t, ArrayList a) {
     tgt = t;
+    arr = a;
     timer = -1;
     speedCap = 30;
     myCenterX = ship.getX();
@@ -14,7 +16,7 @@ class Missile extends Projectile {
     corners = 5;
     xCorners = new int[]{-4, 0, 6, 0,-4};
     yCorners = new int[]{-2,-2, 0, 2, 2};
-    myFillColor = #FFFFFF;
+    myFillColor = #000000;
     myStrokeColor = #FFFFFF;
   }
   public void target(Floater t) {
@@ -22,10 +24,7 @@ class Missile extends Projectile {
   }
   
   /***
-Also somewhat related - target-locking while there are no asteroids on screen currently crashes the game.
-
   HOW TO FIX MOVEMENT ISSUE??
-    0. figure out how to do target tracking through wraparounds
     1. calculate own trajectory
     2. calculate target trajectory + intercept
     3. find diff btwn intercept line and trajectory
@@ -36,8 +35,17 @@ Also somewhat related - target-locking while there are no asteroids on screen cu
   
   public void move() {
     if(tgt != null) {
-      targetX = tgt.getX();
-      targetY = tgt.getY();
+    
+      
+      //offsets target coordinates if approach thru screen overlap would be faster
+      if (Math.abs(tgt.getX()+width-myCenterX) < Math.abs(tgt.getX()-myCenterX)) targetX = tgt.getX()+width;
+      else if (Math.abs(myCenterX+width-tgt.getX()) < Math.abs(myCenterX-tgt.getX())) targetX = tgt.getX()-width;
+      else targetX = tgt.getX();
+      if (Math.abs(tgt.getY()+height-myCenterY) < Math.abs(tgt.getY()-myCenterY)) targetY = tgt.getY()+height;
+      else if (Math.abs(myCenterY+height-tgt.getY()) < Math.abs(myCenterY-tgt.getY())) targetY = tgt.getY()-height;
+      else targetY = tgt.getY();
+      
+      
       //calculates target angle and prevents wraparound
       if(myCenterX > targetX) targetAngle = PI+Math.atan((myCenterY-targetY)/(myCenterX-targetX));
       if(myCenterX < targetX) targetAngle = Math.atan((myCenterY-targetY)/(myCenterX-targetX));
@@ -54,6 +62,9 @@ Also somewhat related - target-locking while there are no asteroids on screen cu
       //prevents wraparound
       if(myRad > 2*PI) this.turn(-360);
       if(myRad < -2*PI) this.turn(360);
+      
+      if(arr.contains(tgt) == false) tgt = null;
+      
       super.move();
     }  
     else {
