@@ -67,14 +67,21 @@ class Spaceship extends Floater
       if (num < targetNum) targetNum--;
     }
     
-    public void target(ArrayList arr, boolean cmd) {
-      if (cmd && targetTimer <= 0) {
-        targetTimer = 10;
-        targetNum++;
+    public void target(ArrayList arr, boolean cmd1, boolean cmd2) {
+      if (targetTimer <= 0 && arr.size() >= 1) {
+        if (cmd1) {
+          targetTimer = 10;
+          targetNum++;
+          if (targetNum > arr.size()-1) targetNum = 0;
+        }
+        if (cmd2) {
+          targetTimer = 10;
+          targetNum--;
+          if (targetNum < 0) targetNum = arr.size()-1;
+        }
       }
       if (targetTimer > 0) targetTimer--;
-      if (targetNum > arr.size()-1) targetNum = 0;
-      
+
       if (targetNum >= 0) {
         tgt = (Floater)arr.get(targetNum);
         
@@ -121,7 +128,7 @@ class Spaceship extends Floater
     Lightning
     ***/
     
-    public void shoot(ArrayList proj) {
+    public void shoot(ArrayList proj, ArrayList arr) {
       if (shootTimer == 0) {
         if (weapon == "Guns") {
             proj.add(new Bullet(this));
@@ -134,7 +141,7 @@ class Spaceship extends Floater
           
         }
         if (weapon == "Missiles") {
-          proj.add(new Missile(this,tgt));
+          proj.add(new Missile(this,tgt,arr));
           shootTimer = 30;
         }
         if (weapon == "Mines") {
