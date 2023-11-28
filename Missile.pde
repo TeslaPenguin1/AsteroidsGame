@@ -22,6 +22,8 @@ class Missile extends Projectile {
   }
   
   /***
+Also somewhat related - target-locking while there are no asteroids on screen currently crashes the game.
+
   HOW TO FIX MOVEMENT ISSUE??
     0. figure out how to do target tracking through wraparounds
     1. calculate own trajectory
