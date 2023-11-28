@@ -39,7 +39,7 @@ public void setup() {
   background(0);
   asts = new ArrayList <Asteroid>();
   bullets = new ArrayList <Projectile>();
-  for (int i = 0; i < 1; i++) asts.add(new Asteroid(2, Math.random()*1200,0));
+  for (int i = 0; i < 30; i++) asts.add(new Asteroid(2, Math.random()*1200,0));
   for(int i = 0; i < stars.length; i++) stars[i] = new Star();
   strokeWeight(1.5);
   enterprise.hit(-999999);
