@@ -42,7 +42,7 @@ public void setup() {
   for (int i = 0; i < 30; i++) asts.add(new Asteroid(2, Math.random()*1200,0));
   for(int i = 0; i < stars.length; i++) stars[i] = new Star();
   strokeWeight(1.5);
-  enterprise.hit(-999999);
+  //enterprise.hit(-999999);
 }
 public void draw() {
   fill(0);
