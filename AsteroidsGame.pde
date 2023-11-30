@@ -35,7 +35,7 @@ Enemies
 
 
 public void setup() {
-  size(1200, 800);
+  size(1280, 720);
   background(0);
   asts = new ArrayList <Asteroid>();
   bullets = new ArrayList <Projectile>();
