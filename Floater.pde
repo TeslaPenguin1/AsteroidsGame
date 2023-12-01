@@ -87,6 +87,9 @@ class Floater //Do NOT modify the Floater class! Make changes in the Spaceship c
   public void hit(int dmg) {
     health -= dmg;
   }
+  public void setHealth(int h) {
+    health = h;
+  }
   public int getHealth() {
     return health;
   }
