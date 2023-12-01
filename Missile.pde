@@ -1,8 +1,9 @@
 class Missile extends Projectile {
   private Floater tgt;
   private ArrayList arr;
-  private double targetX, targetY, targetAngle, velAngle, interceptAngle, myRad;
+  private double targetX, targetY, interceptAngle, velAngle, commandAngle, myRad;
   public Missile(Spaceship ship, Floater t, ArrayList a) {
+    debug = false;
     tgt = t;
     arr = a;
     timer = -1;
@@ -18,24 +19,17 @@ class Missile extends Projectile {
     yCorners = new int[]{-2,-2, 0, 2, 2};
     myFillColor = #000000;
     myStrokeColor = #FFFFFF;
+    size = 10;
+    accelerate(3);
   }
   public void target(Floater t) {
     tgt = t;
   }
   
-  /***
-  HOW TO FIX MOVEMENT ISSUE??
-    1. calculate own trajectory
-    2. calculate target trajectory + intercept
-    3. find diff btwn intercept line and trajectory
-    4. target angle = something proportional to diff
-  Thus, the missile will slowly turn towards its target as it improves its vector.
-  
-  ***/
   
   public void move() {
     if(tgt != null) {
-    
+      
       
       //offsets target coordinates if approach thru screen overlap would be faster
       if (Math.abs(tgt.getX()+width-myCenterX) < Math.abs(tgt.getX()-myCenterX)) targetX = tgt.getX()+width;
@@ -45,26 +39,72 @@ class Missile extends Projectile {
       else if (Math.abs(myCenterY+height-tgt.getY()) < Math.abs(myCenterY-tgt.getY())) targetY = tgt.getY()-height;
       else targetY = tgt.getY();
       
+      double dist = Math.sqrt(Math.pow(myCenterX - targetX, 2) + Math.pow(myCenterY - targetY, 2));
+      double speed = Math.sqrt(Math.pow(myXspeed, 2) + Math.pow(myYspeed, 2));
+      double timeToIntercept = -speed+Math.sqrt(Math.pow(speed,2) + 2*dist);
       
-      //calculates target angle and prevents wraparound
-      if(myCenterX > targetX) targetAngle = PI+Math.atan((myCenterY-targetY)/(myCenterX-targetX));
-      if(myCenterX < targetX) targetAngle = Math.atan((myCenterY-targetY)/(myCenterX-targetX));
+      targetX+=tgt.getXspeed()*timeToIntercept;
+      targetY+=tgt.getYspeed()*timeToIntercept;
+      
+      //calculates angles
+      if(myCenterX > targetX) interceptAngle = PI+Math.atan((myCenterY-targetY)/(myCenterX-targetX));
+      if(myCenterX <= targetX) interceptAngle = Math.atan((myCenterY-targetY)/(myCenterX-targetX));
+      if(myXspeed > 0) velAngle = Math.atan(myYspeed/myXspeed);
+      if(myXspeed < 0) velAngle = PI+Math.atan(myYspeed/myXspeed);
+      
+      commandAngle = 2*interceptAngle-velAngle;
       myRad = myPointDirection*PI/180;
-      if(targetAngle-myRad > PI) targetAngle-=2*PI;
-      if(targetAngle-myRad < -PI) targetAngle+=2*PI;
-      accelerate(1);
+
       
+      if(velAngle-interceptAngle > PI/2) commandAngle = velAngle+PI;
+      if(velAngle-interceptAngle < -PI/2) commandAngle = velAngle-PI;
+      
+      
+      if(commandAngle-myRad > PI) commandAngle-=2*PI;
+      if(commandAngle-myRad < -PI) commandAngle+=2*PI;      
+      
+      
+      /***
+      DEBUG LINES
+      ***/
+      if (debug) {
+        strokeWeight(3);
+        translate((float)myCenterX, (float)myCenterY);
+        rotate((float)interceptAngle);
+        stroke(#FF0000);
+        line(0,0,50,0);
+        rotate(-1*(float)interceptAngle);
+        rotate((float)velAngle);
+        stroke(#00FF00);
+        line(0,0,50,0);
+        rotate(-1*(float)velAngle);
+        rotate((float)commandAngle);
+        stroke(#0000FF);
+        line(0,0,50,0);
+        rotate(-1*(float)commandAngle);
+        rotate((float)myRad);
+        stroke(#FFFFFF);
+        line(0,0,25,0);
+        rotate(-1*(float)myRad);
+        translate(-1*(float)myCenterX, -1*(float)myCenterY);
+        strokeWeight(1);
+      }
+      
+      double angleDiff = commandAngle - myRad;
       //calculates angle difference, rotates missile proportional to
-      double delta = 0.5*Math.abs(targetAngle - myRad + Math.random()*0.1-0.05);
-      if(delta > 0.5) delta = 0.5;
-      if(myRad > targetAngle) this.turn(-delta*180/PI);
-      if(myRad < targetAngle) this.turn(delta*180/PI);
+      double angleMax = 0.5;
+      double delta = angleMax*Math.abs(angleDiff);
+      if(delta > angleMax) delta = angleMax;
+      if(myRad > commandAngle) this.turn(-delta*180/PI);
+      if(myRad < commandAngle) this.turn(delta*180/PI);
       //prevents wraparound
       if(myRad > 2*PI) this.turn(-360);
       if(myRad < -2*PI) this.turn(360);
       
-      if(arr.contains(tgt) == false) tgt = null;
       
+      if (angleDiff < 0.5) accelerate(1);
+      
+      if(arr.contains(tgt) == false) tgt = null;
       super.move();
     }  
     else {
