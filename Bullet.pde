@@ -1,18 +1,19 @@
-class Projectile extends Floater {
-  protected int timer;
-  protected int size;
-  protected boolean debug;
-  public int getTimer() {
-    return timer;
+class Bullet extends Projectile {
+  public Bullet(Spaceship ship) {
+    myCenterX = ship.getX();
+    myCenterY = ship.getY();
+    myXspeed = ship.getXspeed();
+    myYspeed = ship.getYspeed();
+    speedCap = -1;
+    myPointDirection = ship.getPointDirection();
+    accelerate(12);
+    timer = 90;
+    damage = 3;
+    size = 1;
+    debug = false;
   }
-  public int getSize() {
-    return size;
-  }
-  public void move() {
-    timer--;
-    super.move();
-  }
-  public void doDebug(boolean d) {
-    debug = d;
+  public void show() {
+    fill(#FFFFFF);
+    ellipse((float)myCenterX, (float)myCenterY, 3,3);
   }
 }
