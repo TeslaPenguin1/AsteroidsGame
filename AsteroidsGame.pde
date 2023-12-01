@@ -1,7 +1,8 @@
 Spaceship enterprise = new Spaceship();
 boolean doGame = true;
+boolean debug = false;
 boolean upPressed, downPressed, leftPressed, rightPressed, sPressed, spacePressed, 
-    dPressed, shiftPressed, ctrlPressed, wPressed, xPressed;
+    dPressed, shiftPressed, ctrlPressed, wPressed, xPressed, mPressed;
 Star[] stars = new Star[1000];
 ArrayList <Asteroid> asts;
 ArrayList <Projectile> bullets;
@@ -10,6 +11,7 @@ ArrayList <Projectile> bullets;
 
 Visuals
 - Better looking ship
+- Better Targeting
 - Hyperspace Animation
 - Better UI
 - Score/winning?
@@ -21,7 +23,6 @@ Abilities
   - Wave
   - PDC
 - Special weapons
-  - Missile
   - Mines
   - Lightning
   
@@ -35,14 +36,13 @@ Enemies
 
 
 public void setup() {
-  size(1280, 720);
+  size(1280, 760);
   background(0);
   asts = new ArrayList <Asteroid>();
   bullets = new ArrayList <Projectile>();
-  for (int i = 0; i < 30; i++) asts.add(new Asteroid(2, Math.random()*1200,0));
+  for (int i = 0; i < 1; i++) asts.add(new Asteroid(2, Math.random()*1280,0));
   for(int i = 0; i < stars.length; i++) stars[i] = new Star();
   strokeWeight(1.5);
-  //enterprise.hit(-999999);
 }
 public void draw() {
   fill(0);
@@ -57,6 +57,9 @@ public void draw() {
     enterprise.show(upPressed,downPressed);
     enterprise.tick();
     enterprise.setShield(dPressed);
+    if (debug) {
+      enterprise.setHealth(999999);
+    }
   }
   for(int i = asts.size() - 1; i >= 0; i--) {
     asts.get(i).move();
@@ -77,8 +80,9 @@ public void draw() {
     }
     bullets.get(i).move();
     bullets.get(i).show();
+    bullets.get(i).doDebug(debug);
     for(int j = asts.size() - 1; j >= 0; j--) {
-      if (asts.get(j).collides(bullets.get(i),asts.get(j).getRadius())) {
+      if (asts.get(j).collides(bullets.get(i),asts.get(j).getRadius()+bullets.get(i).getSize())) {
         asts.get(j).hit(bullets.get(i).getDamage());
         bullets.remove(i);
         if (asts.get(j).getHealth() <= 0) {
@@ -100,6 +104,7 @@ public void draw() {
     if (spacePressed) enterprise.shoot(bullets, asts);
     if (wPressed) enterprise.setWeapon("Guns");
     if (xPressed) enterprise.setWeapon("Missiles");
+    if (mPressed) asts.add(new Asteroid(2, Math.random()*1280,0));
   }
 }
 
@@ -115,6 +120,8 @@ public void keyPressed() {
   if (keyCode == CONTROL) ctrlPressed = true;
   if (key == 'w') wPressed = true;
   if (key == 'x') xPressed = true;
+  if (key == 'm') mPressed = true;
+  if (key == 'n') debug = true;
 }
 
 public void keyReleased() {
@@ -129,4 +136,5 @@ public void keyReleased() {
   if (keyCode == CONTROL) ctrlPressed = false;
   if (key == 'w') wPressed = false;
   if (key == 'x') xPressed = false;
+  if (key == 'm') mPressed = false;
 }
