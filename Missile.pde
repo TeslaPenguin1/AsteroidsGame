@@ -6,7 +6,7 @@ class Missile extends Projectile {
     debug = false;
     tgt = t;
     arr = a;
-    timer = -1;
+    timer = 250;
     speedCap = 30;
     myCenterX = ship.getX();
     myCenterY = ship.getY();
