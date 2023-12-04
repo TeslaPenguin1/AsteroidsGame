@@ -2,7 +2,7 @@ Spaceship enterprise = new Spaceship();
 boolean doGame = true;
 boolean debug = false;
 boolean upPressed, downPressed, leftPressed, rightPressed, sPressed, spacePressed, 
-    dPressed, shiftPressed, ctrlPressed, wPressed, xPressed, mPressed;
+    dPressed, shiftPressed, ctrlPressed, wPressed, xPressed, cPressed, mPressed;
 Star[] stars = new Star[1000];
 ArrayList <Asteroid> asts;
 ArrayList <Projectile> bullets;
@@ -104,6 +104,7 @@ public void draw() {
     if (spacePressed) enterprise.shoot(bullets, asts);
     if (wPressed) enterprise.setWeapon("Guns");
     if (xPressed) enterprise.setWeapon("Missiles");
+    if (cPressed) enterprise.setWeapon("Mines");
     if (mPressed) asts.add(new Asteroid(2, Math.random()*1280,0));
   }
 }
@@ -120,6 +121,8 @@ public void keyPressed() {
   if (keyCode == CONTROL) ctrlPressed = true;
   if (key == 'w') wPressed = true;
   if (key == 'x') xPressed = true;
+  if (key == 'c') cPressed = true;
+  
   if (key == 'm') mPressed = true;
   if (key == 'n') debug = true;
 }
@@ -135,6 +138,8 @@ public void keyReleased() {
   if (keyCode == SHIFT) shiftPressed = false;
   if (keyCode == CONTROL) ctrlPressed = false;
   if (key == 'w') wPressed = false;
+  if (key == 'c') cPressed = false;
+  
   if (key == 'x') xPressed = false;
   if (key == 'm') mPressed = false;
 }
