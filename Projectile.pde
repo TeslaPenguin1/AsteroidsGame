@@ -15,4 +15,14 @@ class Projectile extends Floater {
   public void doDebug(boolean d) {
     debug = d;
   }
+  public void show() {
+    if (debug) {
+      noFill();
+      strokeWeight(3);
+      stroke(#FFFF00);
+      ellipse((float)myCenterX,(float)myCenterY,(float)size,(float)size);
+      strokeWeight(1);
+    }
+    super.show();
+  }
 }
