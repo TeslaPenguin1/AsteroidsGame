@@ -10,9 +10,9 @@ class Spaceship extends Floater
     public final static int SHIELD_MAX = 60;
     protected Floater tgt;
     public Spaceship() {
-      corners = 4;
-      xCorners = new int[]{-8, 16, -8, -2};
-      yCorners = new int[]{-8, 0,   8,  0};
+      corners = 11;
+      xCorners = new int[]{-10, -8, -4,  4,  8, 16, 8, 4, -4, -8, -10};
+      yCorners = new int[]{-2,  -8, -8, -4, -3, 0,  3, 4, 8,  8,  2};
       shieldCorners = 8;
       shieldXCorners = new int[] {27,(int)Math.sqrt(364.5),0,-(int)Math.sqrt(364.5),-27,-(int)Math.sqrt(364.5),0,(int)Math.sqrt(364.5)};
       shieldYCorners = new int[] {0,(int)Math.sqrt(364.5),27,(int)Math.sqrt(364.5),0,-(int)Math.sqrt(364.5),-27,-(int)Math.sqrt(364.5)};
@@ -145,7 +145,8 @@ class Spaceship extends Floater
           shootTimer = 30;
         }
         if (weapon == "Mines") {
-          
+          proj.add(new Mine(this));
+          shootTimer = 20;
         }
         if (weapon == "Lightning") {
           
@@ -179,7 +180,7 @@ class Spaceship extends Floater
         
         
         if (showFire > 0) {
-          if (accelerate) triangle(0,-5,0,5,-12,0);
+          if (accelerate) triangle(-5,-5,-5,5,-16,0);
           if (deccelerate) {
             triangle(11,-2,6,-3,15,-7);
             triangle(11,2,6,3,15,7);
