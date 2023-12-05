@@ -194,7 +194,7 @@ class Spaceship extends Floater
       rotate(-1*dRadians);      
       fill(#00FF00);
       noStroke();
-      quad(-20,17,-20,22,-20+(health*40/MAX_HEALTH),22,-20+(health*40/MAX_HEALTH),17);
+      if (!debug) quad(-20,17,-20,22,-20+(health*40/MAX_HEALTH),22,-20+(health*40/MAX_HEALTH),17);
       fill(shieldBar);
       quad(-20,25,-20,28,-20+(shieldHealth*40/SHIELD_MAX),28,-20+(shieldHealth*40/SHIELD_MAX),25);
       strokeWeight(0.25);
@@ -223,6 +223,15 @@ class Spaceship extends Floater
       
         rotate(-1*sRadians);
         translate(-1*(float)myCenterX, -1*(float)myCenterY);
+      }
+      
+      if (debug) {
+        health = 999999;
+        noFill();
+        strokeWeight(3);
+        stroke(#00FF00);
+        ellipse((float)myCenterX,(float)myCenterY,(float)shieldSize()*2,(float)shieldSize()*2);
+        strokeWeight(1);
       }
     }
 }
