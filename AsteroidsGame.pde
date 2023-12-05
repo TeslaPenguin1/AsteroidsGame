@@ -23,7 +23,6 @@ Abilities
   - Wave
   - PDC
 - Special weapons
-  - Mines
   - Lightning
   
 Enemies
