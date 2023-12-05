@@ -1,7 +1,8 @@
 class Projectile extends Floater {
   protected int timer;
   protected int size;
-  protected boolean debug;
+  protected int explodeSize;
+  protected boolean remove, explosive;
   public int getTimer() {
     return timer;
   }
@@ -12,17 +13,25 @@ class Projectile extends Floater {
     timer--;
     super.move();
   }
-  public void doDebug(boolean d) {
-    debug = d;
+  public boolean getRemove() {
+    return remove;
+  }
+  public boolean doesExplode() {
+    return explosive;
   }
   public void show() {
     if (debug) {
       noFill();
       strokeWeight(3);
       stroke(#FFFF00);
-      ellipse((float)myCenterX,(float)myCenterY,(float)size,(float)size);
+      ellipse((float)myCenterX,(float)myCenterY,(float)2*size,(float)2*size);
       strokeWeight(1);
     }
     super.show();
+  }
+  public void explode(ArrayList a) {
+    if (explosive) {
+      a.add(new Explosion(this, explodeSize, a));
+    }
   }
 }
