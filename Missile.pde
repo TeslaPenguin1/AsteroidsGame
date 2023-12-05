@@ -21,6 +21,9 @@ class Missile extends Projectile {
     myStrokeColor = #FFFFFF;
     size = 10;
     accelerate(3);
+    explodeSize = 50;
+    remove = true;
+    explosive = true;
   }
   public void target(Floater t) {
     tgt = t;
