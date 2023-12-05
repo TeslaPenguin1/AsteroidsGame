@@ -57,13 +57,12 @@ public void draw() {
     enterprise.show(upPressed,downPressed);
     enterprise.tick();
     enterprise.setShield(dPressed);
-    if (debug) {
-      enterprise.setHealth(999999);
-    }
+    enterprise.doDebug(debug);
   }
   for(int i = asts.size() - 1; i >= 0; i--) {
     asts.get(i).move();
     asts.get(i).show();
+    asts.get(i).doDebug(debug);
     if(asts.get(i).collides(enterprise,asts.get(i).getRadius() + enterprise.shieldSize())) {
       enterprise.hit(asts.get(i).getDamage());
       if (enterprise.getTarget() == asts.get(i)) enterprise.deselect();
@@ -84,7 +83,8 @@ public void draw() {
     for(int j = asts.size() - 1; j >= 0; j--) {
       if (asts.get(j).collides(bullets.get(i),asts.get(j).getRadius()+bullets.get(i).getSize())) {
         asts.get(j).hit(bullets.get(i).getDamage());
-        bullets.remove(i);
+        bullets.get(i).explode(bullets);
+        if (bullets.get(i).getRemove()) bullets.remove(i);
         if (asts.get(j).getHealth() <= 0) {
           if(asts.get(j).getSize() > 0) asts.get(j).split(asts);
           if (enterprise.getTarget() == asts.get(j)) enterprise.deselect();
