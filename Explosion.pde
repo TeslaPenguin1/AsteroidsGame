@@ -30,7 +30,7 @@ class Explosion extends Projectile {
   public void move() {
     if (size < maxSize && rise) {
       size++;
-      damage--;
+      if (damage > 1) damage--;
     }
     else {
       rise = false;
@@ -38,7 +38,7 @@ class Explosion extends Projectile {
     }
     if (size < 0) timer = 0;
     for(int i = list.size() - 1; i >= 0; i--) {
-      if (list.get(i).doesExplode()) if (this.collides(list.get(i),size)) {
+      if (list.get(i).doesExplode() && this.collides(list.get(i),size)) {
         list.get(i).explode(list);
         list.remove(i);
       }
