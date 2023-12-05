@@ -31,6 +31,16 @@ class Asteroid extends Floater {
     super.move();
     myFillColor = 127*(health-3)/12;
   }
+  public void show() {
+    super.show();
+    if (debug) {
+      noFill();
+      strokeWeight(3);
+      stroke(#FF0000);
+      ellipse((float)myCenterX,(float)myCenterY,(float)getRadius()*2,(float)getRadius()*2);
+      strokeWeight(1);
+    }
+  }
   public int getSize() {
     return size;
   }
