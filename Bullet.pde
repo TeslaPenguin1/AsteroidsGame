@@ -13,6 +13,8 @@ class Bullet extends Projectile {
     debug = false;
     explodeSize = 0;
     remove = true;
+    myStrokeColor = #FFFFFF;
+    myFillColor = #FFFFFF;
   }
   public void show() {
     fill(#FFFFFF);
