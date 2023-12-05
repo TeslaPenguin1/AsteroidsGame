@@ -14,10 +14,13 @@ class Mine extends Projectile {
     myStrokeColor = #FFFFFF;
     speedCap = -1;
     size = 10;
+    explodeSize = 100;
+    remove = true;
+    explosive = true;
   }
   public void move() {
-    myXspeed -= myXspeed*0.01;
-    myYspeed -= myYspeed*0.01;
+    myXspeed -= myXspeed*0.003;
+    myYspeed -= myYspeed*0.003;
     super.move();
   }
 }
