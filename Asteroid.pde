@@ -30,6 +30,7 @@ class Asteroid extends Floater {
     myPointDirection += rotSpeed;
     super.move();
     myFillColor = 127*(health-3)/12;
+    if (myFillColor < 0) myFillColor = 0;
   }
   public void show() {
     super.show();
