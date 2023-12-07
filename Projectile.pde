@@ -2,7 +2,7 @@ class Projectile extends Floater {
   protected int timer;
   protected int size;
   protected int explodeSize;
-  protected boolean remove, explosive;
+  protected boolean remove, explosive, damageSelf;
   public int getTimer() {
     return timer;
   }
@@ -18,6 +18,9 @@ class Projectile extends Floater {
   }
   public boolean doesExplode() {
     return explosive;
+  }
+  public boolean damagesSelf() {
+    return damageSelf;
   }
   public void show() {
     if (debug) {
