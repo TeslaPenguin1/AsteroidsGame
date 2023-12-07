@@ -183,7 +183,7 @@ class Spaceship extends Floater
       float dRadians = (float)(myPointDirection*(Math.PI/180));
       rotate(dRadians);
       
-      if (!debug && invTimer != 0 && timer/10 % 2 == 0) myStrokeColor = #999999;
+      if (!debug && invTimer != 0 && (timer/10) % 2 == 0) myStrokeColor = #999999;
       else myStrokeColor = #FFFFFF;
       
       if (accelerate || deccelerate) {
