@@ -20,6 +20,7 @@ class Explosion extends Projectile {
     yCorners = new int[]{0,midpoint,size,midpoint,0,-midpoint,-size,-midpoint};
     remove = false;
     rise = true;
+    damageSelf = true;
   }
   public void show() {
     midpoint = (int)Math.sqrt(Math.pow(size,2)/2.0);
