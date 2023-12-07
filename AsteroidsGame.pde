@@ -6,24 +6,36 @@ boolean upPressed, downPressed, leftPressed, rightPressed, sPressed, spacePresse
 Star[] stars = new Star[1000];
 ArrayList <Asteroid> asts;
 ArrayList <Projectile> bullets;
+ArrayList <Pickup> powerups;
 
 /*** TODO
 
-Visuals
-- Better looking ship
-- Better Targeting
-- Hyperspace Animation
-- Better UI
-- Score/winning?
+Game Mechanics
+- Targeting
+  - Target-Locking
+  - Better UI
+- Special Weapon Limits
+  - UI
+- Score
+  - Enemies
+- Pickups
+  - Ammo
+  - Health
+  - Powerups
 
 Abilities
-- Alt utilities
+- Utilities
+  - Hyperspace
+    - Animation
+    - Better UI
   - Chaff (not currently important)
-- Alt basic weapons
-  - Wave
-  - PDC
+- Basic weapons
+  - Ion Wave
+  - Point Defense
 - Special weapons
   - Lightning
+  - Mines
+    - Better appearance
   
 Enemies
 - UFOs
@@ -39,6 +51,7 @@ public void setup() {
   background(0);
   asts = new ArrayList <Asteroid>();
   bullets = new ArrayList <Projectile>();
+  powerups = new ArrayList <Pickup>();
   for (int i = 0; i < 20; i++) asts.add(new Asteroid(2, Math.random()*1280,0));
   for(int i = 0; i < stars.length; i++) stars[i] = new Star();
   strokeWeight(1.5);
@@ -57,6 +70,7 @@ public void draw() {
     enterprise.tick();
     enterprise.setShield(dPressed);
     enterprise.doDebug(debug);
+    if(asts.size() == 0) for (int i = 0; i < 20; i++) asts.add(new Asteroid(2, Math.random()*1280,0));
   }
   for(int i = asts.size() - 1; i >= 0; i--) {
     asts.get(i).move();
@@ -67,7 +81,6 @@ public void draw() {
       if (enterprise.getTarget() == asts.get(i)) enterprise.deselect();
       else enterprise.targetDecrement(i);
       asts.remove(i);
-      if(enterprise.getHealth() <= 0) doGame = false;
     }
   }
   
@@ -76,6 +89,7 @@ public void draw() {
       bullets.remove(i);
       break;
     }
+    if (bullets.get(i).damagesSelf() && bullets.get(i).collides(enterprise, enterprise.shieldSize() + bullets.get(i).getSize())) enterprise.hit(bullets.get(i).getDamage()/10);
     bullets.get(i).move();
     bullets.get(i).show();
     bullets.get(i).doDebug(debug);
@@ -94,6 +108,9 @@ public void draw() {
       }
     }
   }
+  
+  if(enterprise.getHealth() <= 0) doGame = false;
+  
   if (keyPressed) {
     if (upPressed) enterprise.accelerate(0.1);
     if (downPressed) enterprise.accelerate(-0.1);
