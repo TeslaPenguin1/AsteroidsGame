@@ -1,7 +1,8 @@
 class Spaceship extends Floater  
 {   
-    protected int hyperTimer, showFire, shootTimer, timer, targetNum, targetTimer,
-        recovRate, shieldBar, shieldRot, shieldCorners, shieldFill, shieldStroke, shieldHealth;
+    protected int hyperTimer, shootTimer, timer, targetNum, targetTimer, invTimer,
+        recovRate, shieldBar, shieldRot, shieldCorners, shieldFill, shieldStroke, shieldHealth,
+        mineAmt, missileAmt;
     protected int[] shieldXCorners, shieldYCorners;
     protected double targetAngle;
     protected boolean shielded, shieldBroken, targetLocked;
@@ -23,8 +24,7 @@ class Spaceship extends Floater
       myCenterX = 600;
       myCenterY = 400;
       myXspeed = myYspeed = myPointDirection = 0;
-      hyperTimer = 0;
-      showFire = 2;
+      hyperTimer = invTimer = timer = 0;
       speedCap = 20;
       damage = 12;
       health = MAX_HEALTH;
@@ -36,6 +36,7 @@ class Spaceship extends Floater
       targetNum = -1;
       tgt = null;
       weapon = "Guns";
+      mineAmt = missileAmt = 5;
     }
     public void tick() {
       //decrement the cooldown
@@ -43,6 +44,7 @@ class Spaceship extends Floater
       if (shootTimer > 0) shootTimer--;
       timer++;
       shieldRot++;
+      if (invTimer > 0) invTimer--;
       if (shielded && timer % 3 == 0) shieldHealth--;
       if (!shielded && shieldHealth < SHIELD_MAX && timer % recovRate == 0) shieldHealth++;
       if (shieldHealth == SHIELD_MAX) {
@@ -51,6 +53,7 @@ class Spaceship extends Floater
         recovRate = 2;
       }
       if (shieldHealth < 0) {
+        shieldHealth = 0;
         shielded = false;
         shieldBroken = true;
         shieldBar = #FF0000;
@@ -120,33 +123,37 @@ class Spaceship extends Floater
     
     /***
     Valid weapons:
-    Guns          (done)
+    Guns            (done)
     Ion Wave
-    PDC
-    Missiles
-    Mines
+    Point Defense
+    Missiles        (done)
+    Mines           (done)
     Lightning
     ***/
-    
+    public void doDebug(boolean d) {
+      super.doDebug(d);
+    }
     public void shoot(ArrayList proj, ArrayList arr) {
       if (shootTimer == 0) {
         if (weapon == "Guns") {
             proj.add(new Bullet(this));
             shootTimer = 6;
         }
-        if (weapon == "PDC") {
+        if (weapon == "Point Defense") {
           
         }
         if (weapon == "Ion Wave") {
           
         }
-        if (weapon == "Missiles") {
+        if (weapon == "Missiles" && missileAmt != 0) {
           proj.add(new Missile(this,tgt,arr));
           shootTimer = 30;
+          missileAmt--;
         }
-        if (weapon == "Mines") {
+        if (weapon == "Mines" && mineAmt != 0) {
           proj.add(new Mine(this));
-          shootTimer = 20;
+          shootTimer = 30;
+          mineAmt--;
         }
         if (weapon == "Lightning") {
           
@@ -166,12 +173,18 @@ class Spaceship extends Floater
     }
     public void hit(int dmg) {
       if (shielded) shieldHealth -= dmg;
-      else super.hit(dmg);
+      else if (invTimer == 0) {
+        super.hit(dmg);
+        invTimer = 100;
+      }
     }
     public void show(boolean accelerate, boolean deccelerate) {
       translate((float)myCenterX, (float)myCenterY);
       float dRadians = (float)(myPointDirection*(Math.PI/180));
       rotate(dRadians);
+      
+      if (!debug && invTimer != 0 && timer/10 % 2 == 0) myStrokeColor = #999999;
+      else myStrokeColor = #FFFFFF;
       
       if (accelerate || deccelerate) {
         //set up engine fire
@@ -179,22 +192,20 @@ class Spaceship extends Floater
         stroke(myStrokeColor);
         
         
-        if (showFire > 0) {
+        if (timer/2 % 2 == 0) {
           if (accelerate) triangle(-5,-5,-5,5,-16,0);
           if (deccelerate) {
             triangle(11,-2,6,-3,15,-7);
             triangle(11,2,6,3,15,7);
           }
         }
-        if (showFire == -1) showFire = 3;
-        showFire--;
         
         
       }
       rotate(-1*dRadians);      
       fill(#00FF00);
       noStroke();
-      if (!debug) quad(-20,17,-20,22,-20+(health*40/MAX_HEALTH),22,-20+(health*40/MAX_HEALTH),17);
+      quad(-20,17,-20,22,-20+(health*40/MAX_HEALTH),22,-20+(health*40/MAX_HEALTH),17);
       fill(shieldBar);
       quad(-20,25,-20,28,-20+(shieldHealth*40/SHIELD_MAX),28,-20+(shieldHealth*40/SHIELD_MAX),25);
       strokeWeight(0.25);
@@ -203,7 +214,7 @@ class Spaceship extends Floater
       quad(-20,17,-20,22,20,22,20,17);
       
       translate(-1*(float)myCenterX, -1*(float)myCenterY);
-      
+     
       
       strokeWeight(1.5);
       super.show();
@@ -226,7 +237,8 @@ class Spaceship extends Floater
       }
       
       if (debug) {
-        health = 999999;
+        invTimer = -1;
+        missileAmt = mineAmt = -1;
         noFill();
         strokeWeight(3);
         stroke(#00FF00);
