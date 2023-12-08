@@ -213,7 +213,12 @@ class Spaceship extends Floater
       stroke(255);
       quad(-20,17,-20,22,20,22,20,17);
       
-      text(String.valueOf(!debug && invTimer != 0 && timer/10 % 2 == 0), 0, -30);
+      String tt;
+      
+      if (!debug && invTimer != 0 && timer/10 % 2 == 0) tt = "dark";
+      else  tt = "light";
+      
+      text(tt, 0, -30);
       
       translate(-1*(float)myCenterX, -1*(float)myCenterY);
      
