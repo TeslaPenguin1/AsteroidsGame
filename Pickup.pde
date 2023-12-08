@@ -1,23 +1,31 @@
 class Pickup extends Floater {
   private String type;
+  private double rotSpeed;
   public Pickup(String t, double x, double y) {
     myCenterX = x;
     myCenterY = y;
     type = t;
-    corners = 4;
-    xCorners = new int[]{5,5,-5,-5};
-    yCorners = new int[]{5,-5,-5,5};
+    corners = 6;
+    int n = 10;
+    int nx = (int)(n/2.0);
+    int ny = (int)(n*Math.sqrt(3)/2.0);
+    xCorners = new int[]{n,nx,-nx,-n,-nx,nx};
+    yCorners = new int[]{0,ny,ny,0,-ny,-ny};
+    myFillColor = #000000;
+    myStrokeColor = #FFFFFF;
+    rotSpeed = 5*Math.random()-2.5;
   }
   
   public void move() {
     //in main game loop, will remove if wraps around edges
     myCenterX += myXspeed;
     myCenterY += myYspeed;
+    myPointDirection += rotSpeed;
   }
   
   public void show() {
     super.show();
-    //draw icon (listed below) on top of shape
+    //translate() whatever w/o rotating
   }
   
   /***
