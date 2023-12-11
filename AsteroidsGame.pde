@@ -34,8 +34,6 @@ Abilities
   - Point Defense
 - Special weapons
   - Lightning
-  - Mines
-    - Better appearance
   
 Enemies
 - UFOs
@@ -53,6 +51,7 @@ public void setup() {
   bullets = new ArrayList <Projectile>();
   powerups = new ArrayList <Pickup>();
   for (int i = 0; i < 20; i++) asts.add(new Asteroid(2, Math.random()*1280,0));
+  //for (int i = 0; i < 2; i++) powerups.add(new Pickup("Repair", Math.random()*1280,0));
   for(int i = 0; i < stars.length; i++) stars[i] = new Star();
   strokeWeight(1.5);
 }
@@ -82,6 +81,11 @@ public void draw() {
       else enterprise.targetDecrement(i);
       asts.remove(i);
     }
+  }
+  
+  for(int i = powerups.size() - 1; i >= 0; i--) {
+    powerups.get(i).move();
+    powerups.get(i).show();
   }
   
   for(int i = bullets.size() - 1; i >= 0; i--) {
