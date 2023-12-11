@@ -2,7 +2,7 @@ class Spaceship extends Floater
 {   
     protected int hyperTimer, shootTimer, timer, targetNum, targetTimer, invTimer,
         recovRate, shieldBar, shieldRot, shieldCorners, shieldFill, shieldStroke, shieldHealth,
-        mineAmt, missileAmt;
+        mineAmt, missileAmt, lightningAmt;
     protected int[] shieldXCorners, shieldYCorners;
     protected double targetAngle;
     protected boolean shielded, shieldBroken, targetLocked;
@@ -36,7 +36,7 @@ class Spaceship extends Floater
       targetNum = -1;
       tgt = null;
       weapon = "Guns";
-      mineAmt = missileAmt = 5;
+      mineAmt = missileAmt = lightningAmt = 5;
     }
     public void tick() {
       //decrement the cooldown
@@ -135,28 +135,38 @@ class Spaceship extends Floater
     }
     public void shoot(ArrayList proj, ArrayList arr) {
       if (shootTimer == 0) {
-        if (weapon == "Guns") {
-            proj.add(new Bullet(this));
-            shootTimer = 6;
-        }
-        if (weapon == "Point Defense") {
+        switch (weapon) {
+        case "Guns":
+          proj.add(new Bullet(this));
+          shootTimer = 6;
+          break;
+            
+        case "Point Defense":
+          break;
           
-        }
-        if (weapon == "Ion Wave") {
+        case "Ion Wave":
+          break;
           
-        }
-        if (weapon == "Missiles" && missileAmt != 0) {
-          proj.add(new Missile(this,tgt,arr));
-          shootTimer = 30;
-          missileAmt--;
-        }
-        if (weapon == "Mines" && mineAmt != 0) {
-          proj.add(new Mine(this));
-          shootTimer = 30;
-          mineAmt--;
-        }
-        if (weapon == "Lightning") {
-          
+        case "Missiles":
+          if (missileAmt != 0) {
+            proj.add(new Missile(this,tgt,arr));
+            shootTimer = 30;
+            missileAmt--;
+          }
+          break;
+        
+        case "Mines":
+          if (mineAmt != 0) {
+            proj.add(new Mine(this));
+            shootTimer = 30;
+            mineAmt--;
+          }
+          break;
+        
+        case "Lightning":
+          if (lightningAmt != 0) {
+            
+          }
         }
       }
     }
@@ -238,7 +248,7 @@ class Spaceship extends Floater
       
       if (debug) {
         invTimer = -1;
-        missileAmt = mineAmt = -1;
+        missileAmt = mineAmt = lightningAmt = -1;
         noFill();
         strokeWeight(3);
         stroke(#00FF00);
