@@ -1,18 +1,24 @@
 class Pickup extends Floater {
   private String type;
   private double rotSpeed;
+  private int myInnerColor, myInnerStroke;
+  private int n;
   public Pickup(String t, double x, double y) {
     myCenterX = x;
     myCenterY = y;
     type = t;
     corners = 6;
-    int n = 10;
+    n = 12;
     int nx = (int)(n/2.0);
     int ny = (int)(n*Math.sqrt(3)/2.0);
     xCorners = new int[]{n,nx,-nx,-n,-nx,nx};
     yCorners = new int[]{0,ny,ny,0,-ny,-ny};
-    myFillColor = #000000;
-    myStrokeColor = #FFFFFF;
+    myFillColor = #229999;
+    myStrokeColor = color(0,0); 
+    myInnerColor = #44DDDD;
+    myInnerStroke = #88FFFF;
+    myXspeed = 6*Math.random()-3;
+    myYspeed = 6*Math.random()-3;
     rotSpeed = 5*Math.random()-2.5;
   }
   
@@ -25,7 +31,57 @@ class Pickup extends Floater {
   
   public void show() {
     super.show();
-    //translate() whatever w/o rotating
+    translate((float)myCenterX,(float)myCenterY);
+    rotate((float)(myPointDirection*(Math.PI/180)));
+    fill(myInnerColor);
+    stroke(myInnerStroke);
+    
+    switch(type) {
+      case "Repair":
+        beginShape();
+        vertex(n*3/5,n/7);
+        vertex(n*3/5,-n/7);
+        vertex(n/7,-n/7);
+        vertex(n/7,-n*3/5);
+        vertex(-n/7,-n*3/5);
+        vertex(-n/7,-n/7);
+        vertex(-n*3/5,-n/7);
+        vertex(-n*3/5,n/7);
+        vertex(-n/7,n/7);
+        vertex(-n/7,n*3/5);
+        vertex(n/7,n*3/5);
+        vertex(n/7,n/7);
+        endShape(CLOSE);
+        break;
+        
+      case "Mines":
+        beginShape();
+        vertex(n*2/3,0);
+        vertex(n*4/15,n*4/15);
+        vertex(0,n*2/3);
+        vertex(-n*4/15,n*4/15);
+        vertex(-n*2/3,0);
+        vertex(-n*4/15,-n*4/15);
+        vertex(0,-n*2/3);
+        vertex(n*4/15,-n*4/15);
+        endShape(CLOSE);
+        break;
+      
+      case "Missiles":
+      
+      
+      case "Lightning":
+      
+      
+      case "Shield":
+      
+      
+      case "Weapon":
+      
+      
+    }
+    rotate(-1*(float)(myPointDirection*(Math.PI/180)));
+    translate(-1*(float)myCenterX,-1*(float)myCenterY);
   }
   
   /***
