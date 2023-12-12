@@ -13,7 +13,7 @@ class Pickup extends Floater {
     int ny = (int)(n*Math.sqrt(3)/2.0);
     xCorners = new int[]{n,nx,-nx,-n,-nx,nx};
     yCorners = new int[]{0,ny,ny,0,-ny,-ny};
-    myFillColor = #229999;
+    myFillColor = #228888;
     myStrokeColor = color(0,0); 
     myInnerColor = #44DDDD;
     myInnerStroke = #88FFFF;
@@ -23,10 +23,18 @@ class Pickup extends Floater {
   }
   
   public void move() {
-    //in main game loop, will remove if wraps around edges
+    //in main game loop, removes if wraps around edges
     myCenterX += myXspeed;
     myCenterY += myYspeed;
     myPointDirection += rotSpeed;
+  }
+  
+  public int getRadius() {
+    return n;
+  }
+  
+  public String getType() {
+    return type;
   }
   
   public void show() {
@@ -68,8 +76,17 @@ class Pickup extends Floater {
         break;
       
       case "Missiles":
-      
-      
+        scale(0.8);
+        beginShape();
+        vertex(-n/2,-n/4);
+        vertex(0,-n/4);
+        vertex(3*n/4,0);
+        vertex(0,n/4);
+        vertex(-n/2,n/4);
+        endShape(CLOSE);
+        scale(1/0.8);
+        break;
+        
       case "Lightning":
       
       
