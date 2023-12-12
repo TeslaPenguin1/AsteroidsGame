@@ -14,14 +14,14 @@ Game Mechanics
 - Targeting
   - Target-Locking
   - Better UI
-- Special Weapon Limits
-  - UI
 - Score
   - Enemies
 - Pickups
-  - Ammo
-  - Health
   - Powerups
+  - UI
+    - Appearance for Lightning, Weapon Boost, and Shield Boost
+    - Ammo counts
+    - Pickup messages (e.g. "+7 HP" or "+2 [mines icon]"
 
 Abilities
 - Utilities
@@ -51,7 +51,7 @@ public void setup() {
   bullets = new ArrayList <Projectile>();
   powerups = new ArrayList <Pickup>();
   for (int i = 0; i < 20; i++) asts.add(new Asteroid(2, Math.random()*1280,0));
-  //for (int i = 0; i < 2; i++) powerups.add(new Pickup("Repair", Math.random()*1280,0));
+  //for (int i = 0; i < 2; i++) powerups.add(new Pickup("Repair", Math.random()*1280,30));
   for(int i = 0; i < stars.length; i++) stars[i] = new Star();
   strokeWeight(1.5);
 }
@@ -86,6 +86,37 @@ public void draw() {
   for(int i = powerups.size() - 1; i >= 0; i--) {
     powerups.get(i).move();
     powerups.get(i).show();
+    if (powerups.get(i).getX() > width + 30 || powerups.get(i).getX() < -30 || powerups.get(i).getY() > height + 30 || powerups.get(i).getY() < -30) {
+      powerups.remove(i);
+      break;
+    }
+    if(powerups.get(i).collides(enterprise,powerups.get(i).getRadius() + enterprise.shieldSize())) {
+      switch(powerups.get(i).getType()) {
+        case "Repair":
+          enterprise.hit(-1*(int)(Math.random()*6)-5);
+          break;
+        
+        case "Mines":
+          enterprise.restock("Mines",(int)(Math.random()*3)+1);
+          break;
+        
+        case "Missiles":
+          enterprise.restock("Missiles",(int)(Math.random()*3)+2);
+          break;
+        
+        case "Lightning":
+          enterprise.restock("Lightning",(int)(Math.random()*2)+1);
+          break;
+        
+        case "Shield":
+          break;
+          
+        case "Weapon":
+          enterprise.setMult(2,(int)(Math.random()*50)+300);
+          break;
+      }
+      powerups.remove(i);
+    }
   }
   
   for(int i = bullets.size() - 1; i >= 0; i--) {
@@ -99,9 +130,9 @@ public void draw() {
     bullets.get(i).doDebug(debug);
     for(int j = asts.size() - 1; j >= 0; j--) {
       if (asts.get(j).collides(bullets.get(i),asts.get(j).getRadius()+bullets.get(i).getSize())) {
-        asts.get(j).hit(bullets.get(i).getDamage());
+        asts.get(j).hit(bullets.get(i).getDamage()*enterprise.getMult());
         bullets.get(i).explode(bullets);
-        if (bullets.get(i).getRemove()) bullets.remove(i);
+        if (bullets.get(i).canRemove()) bullets.remove(i);
         if (asts.get(j).getHealth() <= 0) {
           if(asts.get(j).getSize() > 0) asts.get(j).split(asts);
           if (enterprise.getTarget() == asts.get(j)) enterprise.deselect();
