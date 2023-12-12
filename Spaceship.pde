@@ -2,7 +2,7 @@ class Spaceship extends Floater
 {   
     protected int hyperTimer, shootTimer, timer, targetNum, targetTimer, invTimer,
         recovRate, shieldBar, shieldRot, shieldCorners, shieldFill, shieldStroke, shieldHealth,
-        mineAmt, missileAmt, lightningAmt;
+        mineAmt, missileAmt, lightningAmt, damageMult, boostTimer;
     protected int[] shieldXCorners, shieldYCorners;
     protected double targetAngle;
     protected boolean shielded, shieldBroken, targetLocked;
@@ -37,11 +37,13 @@ class Spaceship extends Floater
       tgt = null;
       weapon = "Guns";
       mineAmt = missileAmt = lightningAmt = 5;
+      damageMult = 1;
     }
     public void tick() {
       //decrement the cooldown
       if (hyperTimer > 0) hyperTimer--;
       if (shootTimer > 0) shootTimer--;
+      if (boostTimer > 0) boostTimer--;
       timer++;
       shieldRot++;
       if (invTimer > 0) invTimer--;
@@ -59,9 +61,23 @@ class Spaceship extends Floater
         shieldBar = #FF0000;
         recovRate = 4;
       }
-      
+      if (boostTimer == 0) {
+        damageMult = 1;
+      }   
     }
     
+    public void overcharge() {
+      damageMult = 2;
+      boostTimer = 50;
+    }
+    
+    public int getMult() {
+      return damageMult;
+    }
+    public void setMult(int m, int t) {
+      damageMult = m;
+      boostTimer = t;
+    }
     public void deselect() {
       tgt = null;
       targetNum = -1;
@@ -182,18 +198,43 @@ class Spaceship extends Floater
       return hyperTimer;
     }
     public void hit(int dmg) {
-      if (shielded) shieldHealth -= dmg;
+      if (dmg < 0) {
+        super.hit(dmg);
+        if (health > MAX_HEALTH) health = MAX_HEALTH;
+      }
+      else if (shielded) shieldHealth -= dmg;
       else if (invTimer == 0) {
         super.hit(dmg);
         invTimer = 100;
       }
     }
+    public void restock(String wep, int amt) {
+      switch(wep) {
+        case "Missiles":
+          missileAmt+=amt;
+          break;
+        
+        case "Mines":
+          mineAmt+=amt;
+          break;
+        
+        case "Lightning":
+          lightningAmt+=amt;
+          break;
+      }
+    }
+    
     public void show(boolean accelerate, boolean deccelerate) {
       translate((float)myCenterX, (float)myCenterY);
       float dRadians = (float)(myPointDirection*(Math.PI/180));
       rotate(dRadians);
       
+      myFillColor = #000000;
       if (invTimer > 0 && (int)(timer/10) % 2 == 0) myStrokeColor = #999999;
+      else if (damageMult > 1 && (int)(timer/10) % 2 == 1) {
+        myStrokeColor = #FFDDDD;
+        myFillColor = #660000;
+      }
       else myStrokeColor = #FFFFFF;
       
       if (accelerate || deccelerate) {
