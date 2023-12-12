@@ -13,7 +13,7 @@ class Projectile extends Floater {
     timer--;
     super.move();
   }
-  public boolean getRemove() {
+  public boolean canRemove() {
     return remove;
   }
   public boolean doesExplode() {
