@@ -2,10 +2,10 @@ class Spaceship extends Floater
 {   
     protected int hyperTimer, shootTimer, timer, targetNum, targetTimer, invTimer,
         recovRate, shieldBar, shieldRot, shieldCorners, shieldFill, shieldStroke, shieldHealth,
-        mineAmt, missileAmt, lightningAmt, damageMult, boostTimer;
+        mineAmt, missileAmt, lightningAmt, damageMult, boostTimer, ammo;
     protected int[] shieldXCorners, shieldYCorners;
     protected double targetAngle;
-    protected boolean shielded, shieldBroken, targetLocked;
+    protected boolean shielded, shieldBroken, targetLocked, shieldBoosted, showAmmo;
     protected String weapon;
     public final static int MAX_HEALTH = 30;
     public final static int SHIELD_MAX = 60;
@@ -38,6 +38,7 @@ class Spaceship extends Floater
       weapon = "Guns";
       mineAmt = missileAmt = lightningAmt = 5;
       damageMult = 1;
+      shieldBoosted = false;
     }
     public void tick() {
       //decrement the cooldown
@@ -47,28 +48,44 @@ class Spaceship extends Floater
       timer++;
       shieldRot++;
       if (invTimer > 0) invTimer--;
-      if (shielded && timer % 3 == 0) shieldHealth--;
+      if (shielded && !shieldBoosted && timer % 3 == 0) shieldHealth--;
       if (!shielded && shieldHealth < SHIELD_MAX && timer % recovRate == 0) shieldHealth++;
       if (shieldHealth == SHIELD_MAX) {
         shieldBroken = false;
-        shieldBar = #00FFFF;
         recovRate = 2;
       }
       if (shieldHealth < 0) {
         shieldHealth = 0;
         shielded = false;
         shieldBroken = true;
-        shieldBar = #FF0000;
         recovRate = 4;
       }
       if (boostTimer == 0) {
         damageMult = 1;
+        shieldBoosted = false;
       }   
+      showAmmo = true;
+      switch (weapon) {
+        case "Missiles":
+          ammo = missileAmt;
+          break;
+          
+        case "Mines":
+          ammo = mineAmt;
+          break;
+          
+        case "Lightning":
+          ammo = lightningAmt;
+          break;
+        
+        default:
+          showAmmo = false;
+      }
     }
-    
-    public void overcharge() {
-      damageMult = 2;
-      boostTimer = 50;
+
+    public void shieldBoost(int t) {
+      shieldBoosted = true;
+      boostTimer = t;
     }
     
     public int getMult() {
@@ -202,6 +219,7 @@ class Spaceship extends Floater
         super.hit(dmg);
         if (health > MAX_HEALTH) health = MAX_HEALTH;
       }
+      else if (shielded && shieldBoosted) return;
       else if (shielded) shieldHealth -= dmg;
       else if (invTimer == 0) {
         super.hit(dmg);
@@ -237,6 +255,17 @@ class Spaceship extends Floater
       }
       else myStrokeColor = #FFFFFF;
       
+      if (shieldBoosted && (int)(timer/10) % 2 == 0) {
+        shieldFill = color(255,255,0,127);
+        shieldStroke = shieldBar = #FFFF00;
+      }
+      else {
+        shieldFill = color(0,255,255,127);
+        shieldStroke = #00FFFF;
+        if (!shieldBroken) shieldBar = #00FFFF;
+        else shieldBar = #FF0000;
+      }
+      
       if (accelerate || deccelerate) {
         //set up engine fire
         fill(myFillColor);
@@ -263,6 +292,15 @@ class Spaceship extends Floater
       noFill();
       stroke(255);
       quad(-20,17,-20,22,20,22,20,17);
+      
+      //TEMPORARY UNTIL BETTER UI
+      fill(#FFFFFF);
+      textAlign(CENTER);
+      textSize(15);
+      if (showAmmo) {
+        text(weapon + " x" + ammo,0,40);
+      }
+      else text(weapon,0,40);
       
       translate(-1*(float)myCenterX, -1*(float)myCenterY);
      
