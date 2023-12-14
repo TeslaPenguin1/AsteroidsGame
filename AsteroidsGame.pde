@@ -7,20 +7,23 @@ Star[] stars = new Star[1000];
 ArrayList <Asteroid> asts;
 ArrayList <Projectile> bullets;
 ArrayList <Pickup> powerups;
+int timedLoop;
+int score;
 
 /*** TODO
 
 Game Mechanics
 - Targeting
-  - Target-Locking
+  - Target-Locking?
   - Better UI
-- Score
+- Game Loop
+  - Score
   - Enemies
-- Pickups
-  - Powerups
+- Pickups 
+  - Pity system?
   - UI
-    - Appearance for Lightning, Weapon Boost, and Shield Boost
-    - Ammo counts
+    - Appearance for Lightning
+    - Better ammo count
     - Pickup messages (e.g. "+7 HP" or "+2 [mines icon]"
 
 Abilities
@@ -51,14 +54,23 @@ public void setup() {
   bullets = new ArrayList <Projectile>();
   powerups = new ArrayList <Pickup>();
   for (int i = 0; i < 20; i++) asts.add(new Asteroid(2, Math.random()*1280,0));
-  //for (int i = 0; i < 2; i++) powerups.add(new Pickup("Repair", Math.random()*1280,30));
   for(int i = 0; i < stars.length; i++) stars[i] = new Star();
   strokeWeight(1.5);
+  timedLoop = 0;
 }
 public void draw() {
   fill(0);
   noStroke();
   quad(0,0,0,height,width,height,width,0);
+  timedLoop++;
+  
+  fill(#FFFFFF);
+  textAlign(RIGHT);
+  textSize(50);
+  text(score,width-20,50);
+  
+  //My Personal High Score: 38600 (update every test)
+  
   for(int i = 0; i < stars.length; i++) stars[i].show();
   if (doGame) {
     fill(#FF0000);
@@ -71,6 +83,11 @@ public void draw() {
     enterprise.doDebug(debug);
     if(asts.size() == 0) for (int i = 0; i < 20; i++) asts.add(new Asteroid(2, Math.random()*1280,0));
   }
+  
+  if (timedLoop % 1000 == 0) {
+    powerups.add(new Pickup((int)(Math.random()*5), Math.random()*1280,-5));
+  }
+  
   for(int i = asts.size() - 1; i >= 0; i--) {
     asts.get(i).move();
     asts.get(i).show();
@@ -79,6 +96,7 @@ public void draw() {
       enterprise.hit(asts.get(i).getDamage());
       if (enterprise.getTarget() == asts.get(i)) enterprise.deselect();
       else enterprise.targetDecrement(i);
+      score += 100*(3-asts.get(i).getSize());
       asts.remove(i);
     }
   }
@@ -86,6 +104,7 @@ public void draw() {
   for(int i = powerups.size() - 1; i >= 0; i--) {
     powerups.get(i).move();
     powerups.get(i).show();
+    powerups.get(i).doDebug(debug);
     if (powerups.get(i).getX() > width + 30 || powerups.get(i).getX() < -30 || powerups.get(i).getY() > height + 30 || powerups.get(i).getY() < -30) {
       powerups.remove(i);
       break;
@@ -109,12 +128,14 @@ public void draw() {
           break;
         
         case "Shield":
+          enterprise.shieldBoost((int)(Math.random()*50)+400);
           break;
           
         case "Weapon":
           enterprise.setMult(2,(int)(Math.random()*50)+300);
           break;
       }
+      score += 500;
       powerups.remove(i);
     }
   }
@@ -137,6 +158,7 @@ public void draw() {
           if(asts.get(j).getSize() > 0) asts.get(j).split(asts);
           if (enterprise.getTarget() == asts.get(j)) enterprise.deselect();
           else enterprise.targetDecrement(j);
+          score += 100*(3-asts.get(j).getSize());
           asts.remove(j);
         }
         break;
@@ -190,7 +212,7 @@ public void keyReleased() {
   if (keyCode == CONTROL) ctrlPressed = false;
   if (key == 'w') wPressed = false;
   if (key == 'c') cPressed = false;
-  
   if (key == 'x') xPressed = false;
+  
   if (key == 'm') mPressed = false;
 }
