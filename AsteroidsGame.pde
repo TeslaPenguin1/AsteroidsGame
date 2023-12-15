@@ -187,17 +187,17 @@ public void keyPressed() {
   if (keyCode == DOWN) downPressed = true;
   if (keyCode == LEFT) leftPressed = true;
   if (keyCode == RIGHT) rightPressed = true;
-  if (key == 's') sPressed = true;
+  if (key == 's' || key == 'S') sPressed = true;
   if (key == ' ') spacePressed = true;
-  if (key == 'd') dPressed = true;
+  if (key == 'd' || key == 'D') dPressed = true;
   if (keyCode == SHIFT) shiftPressed = true;
   if (keyCode == CONTROL) ctrlPressed = true;
-  if (key == 'w') wPressed = true;
-  if (key == 'x') xPressed = true;
-  if (key == 'c') cPressed = true;
+  if (key == 'w' || key == 'W') wPressed = true;
+  if (key == 'x' || key == 'X') xPressed = true;
+  if (key == 'c' || key == 'C') cPressed = true;
   
-  if (key == 'm') mPressed = true;
-  if (key == 'n') debug = true;
+  if (key == 'm' || key == 'M') mPressed = true;
+  if (key == 'n' || key == 'N') debug = true;
 }
 
 public void keyReleased() {
@@ -205,14 +205,14 @@ public void keyReleased() {
   if (keyCode == DOWN) downPressed = false;
   if (keyCode == LEFT) leftPressed = false;
   if (keyCode == RIGHT) rightPressed = false;
-  if (key == 's') sPressed = false;
+  if (key == 's' || key == 'S') sPressed = false;
   if (key == ' ') spacePressed = false;
-  if (key == 'd') dPressed = false;
+  if (key == 'd' || key == 'D') dPressed = false;
   if (keyCode == SHIFT) shiftPressed = false;
   if (keyCode == CONTROL) ctrlPressed = false;
-  if (key == 'w') wPressed = false;
-  if (key == 'c') cPressed = false;
-  if (key == 'x') xPressed = false;
+  if (key == 'w' || key == 'W') wPressed = false;
+  if (key == 'x' || key == 'X') xPressed = false;
+  if (key == 'c' || key == 'C') cPressed = false;
   
-  if (key == 'm') mPressed = false;
+  if (key == 'm' || key == 'M') mPressed = false;
 }
