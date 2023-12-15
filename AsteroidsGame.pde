@@ -17,7 +17,7 @@ Game Mechanics
   - Target-Locking?
   - Better UI
 - Game Loop
-  - Score
+  - Global High Score
   - Enemies
 - Pickups 
   - Pity system?
