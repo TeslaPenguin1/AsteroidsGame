@@ -69,7 +69,7 @@ public void draw() {
   textSize(50);
   text(score,width-20,50);
   
-  //My Personal High Score: 38600 (update every test)
+  //My Personal High Score: 121200 (update every test)
   
   for(int i = 0; i < stars.length; i++) stars[i].show();
   if (doGame) {
@@ -81,7 +81,10 @@ public void draw() {
     enterprise.tick();
     enterprise.setShield(dPressed);
     enterprise.doDebug(debug);
-    if(asts.size() == 0) for (int i = 0; i < 20; i++) asts.add(new Asteroid(2, Math.random()*1280,0));
+    if(asts.size() == 0) {
+      for (int i = 0; i < 20; i++) asts.add(new Asteroid(2, Math.random()*1280,0));
+      score += 1000;
+    }
   }
   
   if (timedLoop % 1000 == 0) {
