@@ -130,8 +130,7 @@ class Spaceship extends Floater
         if(targetAngle-radAngle < -PI) targetAngle+=2*PI;
         
         
-        if (radAngle-0.5 < targetAngle && radAngle+0.5 > targetAngle) fill(#FF0000);
-        else fill(#FF8800);
+        fill(#FF8800);
         
         translate((float)tgt.getX(), (float)tgt.getY());
         ellipse(0,0,100,100);
