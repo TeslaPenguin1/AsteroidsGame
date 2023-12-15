@@ -2,11 +2,12 @@ Spaceship enterprise = new Spaceship();
 boolean doGame = true;
 boolean debug = false;
 boolean upPressed, downPressed, leftPressed, rightPressed, sPressed, spacePressed, 
-    dPressed, shiftPressed, ctrlPressed, wPressed, xPressed, cPressed, mPressed;
+    dPressed, shiftPressed, ctrlPressed, wPressed, xPressed, cPressed, mPressed, bPressed, cheats;
 Star[] stars = new Star[1000];
 ArrayList <Asteroid> asts;
 ArrayList <Projectile> bullets;
 ArrayList <Pickup> powerups;
+ArrayList <Notif> popups;
 int timedLoop;
 int score;
 
@@ -14,7 +15,6 @@ int score;
 
 Game Mechanics
 - Targeting
-  - Target-Locking?
   - Better UI
 - Game Loop
   - Global High Score
@@ -23,8 +23,6 @@ Game Mechanics
   - Pity system?
   - UI
     - Appearance for Lightning
-    - Better ammo count
-    - Pickup messages (e.g. "+7 HP" or "+2 [mines icon]"
 
 Abilities
 - Utilities
@@ -53,6 +51,7 @@ public void setup() {
   asts = new ArrayList <Asteroid>();
   bullets = new ArrayList <Projectile>();
   powerups = new ArrayList <Pickup>();
+  popups = new ArrayList <Notif>();
   for (int i = 0; i < 20; i++) asts.add(new Asteroid(2, Math.random()*1280,0));
   for(int i = 0; i < stars.length; i++) stars[i] = new Star();
   strokeWeight(1.5);
@@ -64,10 +63,14 @@ public void draw() {
   quad(0,0,0,height,width,height,width,0);
   timedLoop++;
   
+  if (debug || mPressed || bPressed) cheats = true;
+  
   fill(#FFFFFF);
   textAlign(RIGHT);
   textSize(50);
   text(score,width-20,50);
+  textSize(25);
+  if (cheats) text("DEBUG COMMANDS USED", width-20, 75);
   
   //My Personal High Score: 121200 (update every test)
   
@@ -87,9 +90,7 @@ public void draw() {
     }
   }
   
-  if (timedLoop % 1000 == 0) {
-    powerups.add(new Pickup((int)(Math.random()*5), Math.random()*1280,-5));
-  }
+  if (timedLoop % 1000 == 0) powerups.add(new Pickup((int)(Math.random()*5), Math.random()*1280,-5));
   
   for(int i = asts.size() - 1; i >= 0; i--) {
     asts.get(i).move();
@@ -113,34 +114,52 @@ public void draw() {
       break;
     }
     if(powerups.get(i).collides(enterprise,powerups.get(i).getRadius() + enterprise.shieldSize())) {
+      int n;
       switch(powerups.get(i).getType()) {
         case "Repair":
-          enterprise.hit(-1*(int)(Math.random()*6)-5);
+          n = (int)(Math.random()*6)+5;
+          enterprise.hit(-1*n);
+          popups.add(new Notif("+" + n + " HP!", powerups.get(i).getX(), powerups.get(i).getY()));
           break;
         
         case "Mines":
-          enterprise.restock("Mines",(int)(Math.random()*3)+1);
+          n = (int)(Math.random()*3)+2;
+          enterprise.restock("Mines",n);
+          popups.add(new Notif("+" + n + " mines!", powerups.get(i).getX(), powerups.get(i).getY()));
           break;
         
         case "Missiles":
-          enterprise.restock("Missiles",(int)(Math.random()*3)+2);
+          n = (int)(Math.random()*3)+2;
+          enterprise.restock("Missiles",n);
+          popups.add(new Notif("+" + n + " missiles!", powerups.get(i).getX(), powerups.get(i).getY()));
           break;
         
         case "Lightning":
-          enterprise.restock("Lightning",(int)(Math.random()*2)+1);
+          n = (int)(Math.random()*2)+2;
+          enterprise.restock("Lightning",n);
+          popups.add(new Notif("+" + n + " lightning!", powerups.get(i).getX(), powerups.get(i).getY()));
           break;
         
         case "Shield":
-          enterprise.shieldBoost((int)(Math.random()*50)+400);
+          n = (int)(Math.random()*50)+400;
+          enterprise.shieldBoost(n);
+          popups.add(new Notif("Shield boosted for " + (int)(n/6.0)/10.0 + " seconds!", powerups.get(i).getX(), powerups.get(i).getY()));
           break;
           
         case "Weapon":
-          enterprise.setMult(2,(int)(Math.random()*50)+300);
+          n = (int)(Math.random()*50)+300;
+          enterprise.setMult(2,n);
+          popups.add(new Notif("Weapons boosted for " + (int)(n/6.0)/10.0 + " seconds!", powerups.get(i).getX(), powerups.get(i).getY()));
           break;
       }
       score += 500;
       powerups.remove(i);
     }
+  }
+  
+  for(int i = popups.size() - 1; i >= 0; i--) {
+    popups.get(i).popup();
+    if (popups.get(i).getTimer() <= 0) popups.remove(i);
   }
   
   for(int i = bullets.size() - 1; i >= 0; i--) {
@@ -182,6 +201,7 @@ public void draw() {
     if (xPressed) enterprise.setWeapon("Missiles");
     if (cPressed) enterprise.setWeapon("Mines");
     if (mPressed) asts.add(new Asteroid(2, Math.random()*1280,0));
+    if (bPressed) powerups.add(new Pickup((int)(Math.random()*5), Math.random()*1280,-5));
   }
 }
 
@@ -200,6 +220,7 @@ public void keyPressed() {
   if (key == 'c' || key == 'C') cPressed = true;
   
   if (key == 'm' || key == 'M') mPressed = true;
+  if (key == 'b' || key == 'B') bPressed = true;
   if (key == 'n' || key == 'N') debug = true;
 }
 
@@ -218,4 +239,5 @@ public void keyReleased() {
   if (key == 'c' || key == 'C') cPressed = false;
   
   if (key == 'm' || key == 'M') mPressed = false;
+  if (key == 'b' || key == 'B') bPressed = false;
 }
