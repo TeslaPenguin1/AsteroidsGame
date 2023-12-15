@@ -85,6 +85,8 @@ class Spaceship extends Floater
 
     public void shieldBoost(int t) {
       shieldBoosted = true;
+      shieldHealth = SHIELD_MAX;
+      shieldBroken = false;
       boostTimer = t;
     }
     
