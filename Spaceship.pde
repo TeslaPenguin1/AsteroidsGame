@@ -2,7 +2,7 @@ class Spaceship extends Floater
 {   
     protected int hyperTimer, shootTimer, timer, targetNum, targetTimer, invTimer,
         recovRate, shieldBar, shieldRot, shieldCorners, shieldFill, shieldStroke, shieldHealth,
-        mineAmt, missileAmt, lightningAmt, damageMult, boostTimer, ammo;
+        mineAmt, missileAmt, lightningAmt, damageMult, boostTimerW, boostTimerS, ammo;
     protected int[] shieldXCorners, shieldYCorners;
     protected double targetAngle;
     protected boolean shielded, shieldBroken, targetLocked, shieldBoosted, showAmmo;
@@ -44,7 +44,8 @@ class Spaceship extends Floater
       //decrement the cooldown
       if (hyperTimer > 0) hyperTimer--;
       if (shootTimer > 0) shootTimer--;
-      if (boostTimer > 0) boostTimer--;
+      if (boostTimerW > 0) boostTimerW--;
+      if (boostTimerS > 0) boostTimerS--;
       timer++;
       shieldRot++;
       if (invTimer > 0) invTimer--;
@@ -60,8 +61,10 @@ class Spaceship extends Floater
         shieldBroken = true;
         recovRate = 4;
       }
-      if (boostTimer == 0) {
+      if (boostTimerW == 0) {
         damageMult = 1;
+      }
+      if (boostTimerS == 0) {
         shieldBoosted = false;
       }   
       showAmmo = true;
@@ -87,7 +90,7 @@ class Spaceship extends Floater
       shieldBoosted = true;
       shieldHealth = SHIELD_MAX;
       shieldBroken = false;
-      boostTimer = t;
+      boostTimerS += t;
     }
     
     public int getMult() {
@@ -95,7 +98,7 @@ class Spaceship extends Floater
     }
     public void setMult(int m, int t) {
       damageMult = m;
-      boostTimer = t;
+      boostTimerW += t;
     }
     public void deselect() {
       tgt = null;
@@ -153,6 +156,27 @@ class Spaceship extends Floater
     }
     public void setWeapon(String wep) {
       weapon = wep;
+    }
+    
+    public int getAmmo(String wep) {
+      switch(wep) {
+        case "Missiles":
+          return missileAmt;
+          
+        case "Mines":
+          return mineAmt;
+          
+        case "Lightning":
+          return lightningAmt;
+          
+        default:
+          return 0;
+      }
+    }
+    
+    public int getBroken() {
+      if (shieldBroken) return 2;
+      else return 1;
     }
     
     /***
@@ -250,13 +274,13 @@ class Spaceship extends Floater
       
       myFillColor = #000000;
       if (invTimer > 0 && (int)(timer/10) % 2 == 0) myStrokeColor = #999999;
-      else if (damageMult > 1 && (boostTimer >= 120 || (int)(timer/10) % 2 == 1)) {
+      else if (damageMult > 1 && (boostTimerW >= 120 || (int)(timer/10) % 2 == 1)) {
         myStrokeColor = #FFDDDD;
         myFillColor = #660000;
       }
       else myStrokeColor = #FFFFFF;
       
-      if (shieldBoosted && (boostTimer >= 120 || (int)(timer/10) % 2 == 0)) {
+      if (shieldBoosted && (boostTimerS >= 120 || (int)(timer/10) % 2 == 0)) {
         shieldFill = color(255,255,0,127);
         shieldStroke = shieldBar = #FFFF00;
       }
