@@ -256,7 +256,7 @@ class Spaceship extends Floater
       }
       else myStrokeColor = #FFFFFF;
       
-      if (shieldBoosted && (int)(timer/10) % 2 == 0) {
+      if (shieldBoosted && (boostTimer >= 60 || (int)(timer/10) % 2 == 0)) {
         shieldFill = color(255,255,0,127);
         shieldStroke = shieldBar = #FFFF00;
       }
