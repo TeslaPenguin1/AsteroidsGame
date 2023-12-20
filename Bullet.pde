@@ -11,7 +11,8 @@ class Bullet extends Projectile {
     damage = 3;
     size = 1;
     debug = false;
-    explodeSize = 0;
+    explosive = false;
+    explodeSize = 10;
     remove = true;
   }
   public void show() {
