@@ -40,7 +40,7 @@ class Explosion extends Projectile {
     if (size < 0) timer = 0;
     for(int i = list.size() - 1; i >= 0; i--) {
       if (list.get(i).doesExplode() && this.collides(list.get(i),size)) {
-        list.get(i).explode(list);
+        list.get(i).explode(list, true);
         list.remove(i);
       }
     }
