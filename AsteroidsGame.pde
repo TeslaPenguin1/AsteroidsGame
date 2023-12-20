@@ -147,7 +147,7 @@ public void draw() {
           break;
           
         case "Weapon":
-          n = (int)(Math.random()*50)+300;
+          n = (int)(Math.random()*50)+600;
           enterprise.setMult(2,n);
           popups.add(new Notif("Weapons boosted for " + (int)(n/6.0)/10.0 + " seconds!", powerups.get(i).getX(), powerups.get(i).getY()));
           break;
