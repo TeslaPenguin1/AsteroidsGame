@@ -32,8 +32,8 @@ class Projectile extends Floater {
     }
     super.show();
   }
-  public void explode(ArrayList a) {
-    if (explosive) {
+  public void explode(ArrayList a, boolean b) {
+    if (explosive || b) {
       a.add(new Explosion(this, explodeSize, a));
     }
   }
