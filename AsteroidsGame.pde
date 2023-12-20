@@ -10,6 +10,8 @@ ArrayList <Pickup> powerups;
 ArrayList <Notif> popups;
 int timedLoop;
 int score;
+double[] weights;
+int weightIndex;
 
 /*** TODO
 
@@ -56,6 +58,8 @@ public void setup() {
   for(int i = 0; i < stars.length; i++) stars[i] = new Star();
   strokeWeight(1.5);
   timedLoop = 0;
+  weights = new double[]{1,1,1,1,1,0};
+  weightIndex = 0;
 }
 public void draw() {
   fill(0);
@@ -90,7 +94,35 @@ public void draw() {
     }
   }
   
-  if (timedLoop % 1000 == 0) powerups.add(new Pickup((int)(Math.random()*5), Math.random()*1280,-5));
+  //Assign weights based on status
+  weights[0] = 6*(5 + enterprise.MAX_HEALTH - enterprise.getHealth())/enterprise.MAX_HEALTH;
+  weights[4] = (10-enterprise.getAmmo("Mines"))/5;
+  weights[3] = (10-enterprise.getAmmo("Missiles"))/5;
+  //weights[5] = (4-enterprise.getAmmo("Lightning"))/4.0;
+  weights[1] = enterprise.getBroken();
+  weights[2] = asts.size()/10.0;
+  if (debug) weights = new double[]{1,1,1,1,1,0};
+  
+  //total weights
+  double weightSum = 0;
+  for(int i = 0; i < weights.length; i++) {
+    if (i != 5 && weights[i] < 0.1) weights[i] = 0.1;
+    weightSum += weights[i];
+  }
+  
+  //find the weighted rng index
+  double rand = Math.random()*weightSum;
+  double count = 0;
+  weightIndex = 0;
+  for(int i = 0; i < weights.length; i++) {
+    count += weights[i];
+    if (count > rand) {
+      weightIndex = i;
+      break;
+    }
+  }
+  
+  if (timedLoop % 1000 == 0) powerups.add(new Pickup(weightIndex, Math.random()*1280,-5));
   
   for(int i = asts.size() - 1; i >= 0; i--) {
     asts.get(i).move();
@@ -201,7 +233,7 @@ public void draw() {
     if (xPressed) enterprise.setWeapon("Missiles");
     if (cPressed) enterprise.setWeapon("Mines");
     if (mPressed) asts.add(new Asteroid(2, Math.random()*1280,0));
-    if (bPressed) powerups.add(new Pickup((int)(Math.random()*5), Math.random()*1280,-5));
+    if (bPressed) powerups.add(new Pickup(weightIndex, Math.random()*1280,-5));
   }
 }
 
