@@ -250,7 +250,7 @@ class Spaceship extends Floater
       
       myFillColor = #000000;
       if (invTimer > 0 && (int)(timer/10) % 2 == 0) myStrokeColor = #999999;
-      else if (damageMult > 1 && (int)(timer/10) % 2 == 1) {
+      else if (damageMult > 1 && (boostTimer >= 120 || (int)(timer/10) % 2 == 1)) {
         myStrokeColor = #FFDDDD;
         myFillColor = #660000;
       }
