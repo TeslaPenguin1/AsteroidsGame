@@ -32,9 +32,9 @@ class Projectile extends Floater {
     }
     super.show();
   }
-  public void explode(ArrayList a, Spaceship s) {
+  public void explode(ArrayList a) {
     if (explosive) {
-      a.add(new Explosion(this, explodeSize*s.getMult(), a));
+      a.add(new Explosion(this, explodeSize, a));
     }
   }
 }
