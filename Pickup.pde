@@ -174,20 +174,4 @@ class Pickup extends Floater {
     rotate(-1*(float)(myPointDirection*(Math.PI/180)));
     translate(-1*(float)myCenterX,-1*(float)myCenterY);
   }
-  
-  /***
-  Types to implement, and their icons:
-  (pickups appear as a small box - will need to change mine appearance)
-  
-    Repair (plus)
-      Increases health of spaceship.
-    
-    Ammunition (Mines/Missiles/Lightning)
-      Increases amount of respective special weapon.
-    
-    Shield Boost (shield - as in medieval shield, not the octagon)
-      Gives unbreakable shield for a short time.
-    Weapon Boost (lightning bolt)
-      Increases all weapon damage for a short time.
-    ***/
 }
