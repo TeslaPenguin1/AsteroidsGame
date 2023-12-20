@@ -174,7 +174,7 @@ public void draw() {
     for(int j = asts.size() - 1; j >= 0; j--) {
       if (asts.get(j).collides(bullets.get(i),asts.get(j).getRadius()+bullets.get(i).getSize())) {
         asts.get(j).hit(bullets.get(i).getDamage()*enterprise.getMult());
-        bullets.get(i).explode(bullets);
+        bullets.get(i).explode(bullets, enterprise.getMult() > 1);
         if (bullets.get(i).canRemove()) bullets.remove(i);
         if (asts.get(j).getHealth() <= 0) {
           if(asts.get(j).getSize() > 0) asts.get(j).split(asts);
