@@ -19,10 +19,8 @@ Game Mechanics
 - Targeting
   - Better UI
 - Game Loop
-  - Global High Score
   - Enemies
 - Pickups 
-  - Pity system?
   - UI
     - Appearance for Lightning
 
