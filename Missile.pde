@@ -2,6 +2,7 @@ class Missile extends Projectile {
   private Floater tgt;
   private ArrayList arr;
   private double targetX, targetY, interceptAngle, velAngle, commandAngle, myRad;
+  private int tgtStroke;
   public Missile(Spaceship ship, Floater t, ArrayList a) {
     debug = false;
     tgt = t;
@@ -24,6 +25,7 @@ class Missile extends Projectile {
     explodeSize = 50;
     remove = true;
     explosive = true;
+    tgtStroke = #FF4400;
   }
   public void target(Floater t) {
     tgt = t;
@@ -91,6 +93,25 @@ class Missile extends Projectile {
         rotate(-1*(float)myRad);
         translate(-1*(float)myCenterX, -1*(float)myCenterY);
         strokeWeight(1);
+      }
+      
+      if (tgt != null) {
+        noFill();
+        stroke(tgtStroke);
+        strokeWeight(4);
+        
+        float tgtRad = 0;
+        if (tgt instanceof Asteroid) {
+          Asteroid targ = (Asteroid)tgt;
+          tgtRad = (float)targ.getRadius();
+        }
+                
+        translate((float)tgt.getX(), (float)tgt.getY());
+        
+        ellipse(0,0,tgtRad,tgtRad);
+        
+        translate(-1*(float)tgt.getX(), -1*(float)tgt.getY());
+        strokeWeight(1.5);
       }
       
       double angleDiff = commandAngle - myRad;
