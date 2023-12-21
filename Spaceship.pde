@@ -2,7 +2,7 @@ class Spaceship extends Floater
 {   
     protected int hyperTimer, shootTimer, timer, targetNum, targetTimer, invTimer,
         recovRate, shieldBar, shieldRot, shieldCorners, shieldFill, shieldStroke, shieldHealth,
-        mineAmt, missileAmt, lightningAmt, damageMult, boostTimerW, boostTimerS, ammo;
+        mineAmt, missileAmt, lightningAmt, damageMult, boostTimerW, boostTimerS, ammo, targetStroke;
     protected int[] shieldXCorners, shieldYCorners;
     protected double targetAngle;
     protected boolean shielded, shieldBroken, targetLocked, shieldBoosted, showAmmo;
@@ -39,6 +39,7 @@ class Spaceship extends Floater
       mineAmt = missileAmt = lightningAmt = 5;
       damageMult = 1;
       shieldBoosted = false;
+      targetStroke = #FF8800;
     }
     public void tick() {
       //decrement the cooldown
@@ -131,13 +132,6 @@ class Spaceship extends Floater
         double radAngle = (myPointDirection*PI/180)%(2*PI);
         if(targetAngle-radAngle > PI) targetAngle-=2*PI;
         if(targetAngle-radAngle < -PI) targetAngle+=2*PI;
-        
-        
-        fill(#FF8800);
-        
-        translate((float)tgt.getX(), (float)tgt.getY());
-        ellipse(0,0,100,100);
-        translate(-1*(float)tgt.getX(), -1*(float)tgt.getY());
       }
     }
     
@@ -348,6 +342,25 @@ class Spaceship extends Floater
       
         rotate(-1*sRadians);
         translate(-1*(float)myCenterX, -1*(float)myCenterY);
+      }
+      
+      if (tgt != null) {
+        noFill();
+        stroke(targetStroke);
+        strokeWeight(2);
+        
+        float tgtRad = 0;
+        if (tgt instanceof Asteroid) {
+          Asteroid targ = (Asteroid)tgt;
+          tgtRad = (float)targ.getRadius();
+        }
+                
+        translate((float)tgt.getX(), (float)tgt.getY());
+        
+        ellipse((float)tgt.getXspeed(),(float)tgt.getYspeed(),3*tgtRad,3*tgtRad);
+        
+        translate(-1*(float)tgt.getX(), -1*(float)tgt.getY());
+        strokeWeight(1.5);
       }
       
       if (debug) {
