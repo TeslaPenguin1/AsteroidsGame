@@ -74,7 +74,7 @@ public void draw() {
   textSize(25);
   if (cheats) text("DEBUG COMMANDS USED", width-20, 75);
   
-  //My Personal High Score: 121200 (update every test)
+  //My Personal High Score: 282300 (update every test)
   
   for(int i = 0; i < stars.length; i++) stars[i].show();
   if (doGame) {
