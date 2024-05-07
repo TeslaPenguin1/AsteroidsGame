@@ -146,6 +146,7 @@ class Spaceship extends Floater
         myXspeed = myYspeed = 0;
         myPointDirection = 360*Math.random();
         hyperTimer = 300;
+        invTimer = 75;
       }
     }
     public void setWeapon(String wep) {
