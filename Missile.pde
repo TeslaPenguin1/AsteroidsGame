@@ -128,7 +128,7 @@ class Missile extends Projectile {
       
       if (angleDiff < 0.5) accelerate(1);
       
-      if(arr.contains(tgt) == false) tgt = null;
+      if(!arr.contains(tgt)) tgt = null;
       super.move();
     }  
     else {
